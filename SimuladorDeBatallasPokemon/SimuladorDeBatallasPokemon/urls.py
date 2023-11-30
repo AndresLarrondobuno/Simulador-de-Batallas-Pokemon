@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0e718047ab55a9669aa7c06a451aa23e579cea5cf99a01b84386fef67720f304
-size 314
+from django.contrib import admin
+from django.urls import path, re_path, include
+from .views import inicio
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    re_path(r'^$', inicio, name='inicio'),
+    re_path(r'^pokemons/', include('Pokemons.urls')),
+    re_path(r'^usuarios/', include('Usuarios.urls')),
+    re_path(r'^equipos/', include('CreacionDeEquipos.urls')),
+
+]
