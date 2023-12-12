@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9d4e917f78437d447308574dd58b6b5ad11bd9d59dcecb263bc850486df04120
-size 299
+from django.urls import re_path
+from .views import detallePokemon, detalleMovimiento
+
+app_name = 'Pokemons'
+
+
+urlpatterns = [
+    re_path(r'^(?P<slug>[-\w]+)/$', detallePokemon, name='detallePokemon'),
+    re_path(r'^movimientos/(?P<slug>[-\w]+)/$', detalleMovimiento, name='detalleMovimiento'),
+
+]

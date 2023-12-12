@@ -1,3 +1,47 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:653b890eccdba5d3b305ca8027e2d060df4dbb540da5aa9256442a107214b96f
-size 1431
+#setup necesario para utilizar cosas de settings.py
+import os
+if __name__ == '__main__':
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'SimuladorDeBatallasPokemon.SimuladorDeBatallasPokemon.settings'
+    import django
+    django.setup()
+
+from django.db import models
+
+class Movimiento(models.Model):
+    nombre = models.CharField(max_length=50)
+    tipo = models.CharField(max_length=50)
+    potencia = models.IntegerField(default=100)
+    precision = models.IntegerField(default=100)
+
+    slug = models.SlugField()
+
+
+class EspeciePokemon(models.Model):
+    nombre = models.CharField(max_length=50)
+    tipoPrincipal = models.CharField(max_length=50)
+    tipoSecundario = models.CharField(max_length=50)
+
+    vidaBase = models.IntegerField(default=200)
+    ataqueBase = models.IntegerField(default=50)
+    defensaBase = models.IntegerField(default=30)
+    ataqueEspecialBase = models.IntegerField(default=50)
+    defensaEspecialBase = models.IntegerField(default=30)    
+    velocidadBase = models.IntegerField(default=100)
+
+    movimientos = models.ManyToManyField(Movimiento)
+
+    slug = models.SlugField()
+
+
+class Pokemon(models.Model):
+    nombre = models.CharField(max_length=50)
+    tipoPrincipal = models.CharField(max_length=50)
+    tipoSecundario = models.CharField(max_length=50)
+
+    vida = models.IntegerField(default=100)
+    ataque = models.IntegerField(default=100)
+    defensa = models.IntegerField(default=100)
+    ataqueEspecial = models.IntegerField(default=100)
+    defensaEspecial = models.IntegerField(default=100)
+    velocidad= models.IntegerField(default=100)
+    especie = models.ForeignKey(EspeciePokemon, on_delete=models.CASCADE)

@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9b71719a724f987f8d3c78f18679ff953b8a7f41ffe1249eee28fef2b228974b
-size 406
+from django.shortcuts import render
+from Pokemons.models import EspeciePokemon, Movimiento
+
+def detallePokemon(request, slug):
+    pokemon = EspeciePokemon.objects.get(slug=slug)
+    return render(request, 'detallePokemon.html', {'pokemon':pokemon})
+
+
+def detalleMovimiento(request, slug):
+    movimiento = Movimiento.objects.get(slug=slug)
+    return render(request, 'detalleMovimiento.html', {'movimiento':movimiento})

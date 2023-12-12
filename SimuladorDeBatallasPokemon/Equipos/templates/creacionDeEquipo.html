@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+    <h2>Crea tu equipo</h2>
+
+
+    <form id="formularioCrearEquipo" action="{% url 'Equipos:crearEquipo' %}" method="post">
+
+        {% csrf_token %}
+
+        <div id="contenedorPrimerPokemon">
+            <input type="text" id="busquedaPrimerPokemon">
+            <select id="primerPokemon" name="primerPokemon"></select>
+            <button type="button" id="agregarPrimerPokemon">
+        </div>
+
+        <div id="contenedorSegundoPokemon">
+            <input type="text" id="busquedaSegundoPokemon">
+            <select id="segundoPokemon" name="segundoPokemon"></select>
+            <button type="button" id="agregarSegundoPokemon">
+        </div>
+        
+        <div>
+            <input type="submit" method="post" action="{% url 'Equipos:crearEquipo' %}" value="Crear Equipo">
+        </div>
+    </form>
+
+    <script src="{% static 'buscarPokemonPorSubstring.js' %}"></script>
+    <script src="{% static 'agregarPokemonAEquipo.js' %}"></script>
+
+{% endblock %}
