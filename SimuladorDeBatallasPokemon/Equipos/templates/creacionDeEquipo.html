@@ -6,29 +6,29 @@
 
     <h2>Crea tu equipo</h2>
 
-
-    <form id="formularioCrearEquipo" action="{% url 'Equipos:crearEquipo' %}" method="post">
-
+    <form id="formularioCrearEquipo" method="post">
         {% csrf_token %}
+        <div id="contenedorPrincipal">
 
-        <div id="contenedorPrimerPokemon">
-            <input type="text" id="busquedaPrimerPokemon">
-            <select id="primerPokemon" name="primerPokemon"></select>
-            <button type="button" id="agregarPrimerPokemon">
+            <div id="contenedorPokemon">
+                <input id="busquedaPokemon" type="text" >
+                <select id="opcionesPokemon"></select>
+                <button id="agregarPokemon" type="button" >Agregar Pokemon</button>
+            </div>
+            
+            <br>
+
+            <div>
+                <button type="button" id="botonGuardarEquipo" >Crear Equipo</button>
+            </div>
+
+            <br>
         </div>
 
-        <div id="contenedorSegundoPokemon">
-            <input type="text" id="busquedaSegundoPokemon">
-            <select id="segundoPokemon" name="segundoPokemon"></select>
-            <button type="button" id="agregarSegundoPokemon">
-        </div>
-        
-        <div>
-            <input type="submit" method="post" action="{% url 'Equipos:crearEquipo' %}" value="Crear Equipo">
-        </div>
     </form>
 
-    <script src="{% static 'buscarPokemonPorSubstring.js' %}"></script>
-    <script src="{% static 'agregarPokemonAEquipo.js' %}"></script>
+    <script type="module" src="{% static 'solicitudesAJAX.js' %}"></script>
+    <script type="module" src="{% static 'agregarPokemonAEquipo.js' %}"></script>
+
 
 {% endblock %}

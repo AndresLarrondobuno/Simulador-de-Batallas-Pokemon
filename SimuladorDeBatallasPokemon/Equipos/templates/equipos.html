@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+
+    {% for equipo in usuario.equipos.all %}
+
+        {{ equipo }}
+        <br>
+    {% empty %}
+        <h2>Todavía no tenés ningún equipo</h2>
+        <a href="{% url 'Equipos:crearEquipo' %}"> Creá tu Equipo </a>
+    {% endfor %}
+
+
+{% endblock %}

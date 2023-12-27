@@ -15,7 +15,7 @@ from django.template.defaultfilters import slugify
 def insertarEspeciesPokemon():
     for datos in DATOS_FORMATEADOS_DE_POKEMONS:
         poseeTipoSecundario = datos['tipoSecundario']
-        pokemon = EspeciePokemon(
+        especie = EspeciePokemon(
             nombre=datos['nombre'],
             tipoPrincipal=datos['tipoPrincipal'],
             tipoSecundario=datos['tipoSecundario'] if poseeTipoSecundario else '',
@@ -26,15 +26,14 @@ def insertarEspeciesPokemon():
             defensaEspecialBase=datos['defensaEspecial'],
             velocidadBase=datos['velocidad'],
 
-
-            slug = slugify(datos['nombre']),
+            slug = slugify(datos['nombre'])
         )
-        pokemon.save()
+        especie.save()
         print(f'{datos["nombre"]} agregado a la base de datos.')
 
         movimientos = Movimiento.objects.filter(nombre__in = datos['movimientos'])
-        pokemon.movimientos.set(movimientos)
-        pokemon.save()
+        especie.movimientos.set(movimientos)
+        especie.save()
 
         print(f'movimientos de {datos["nombre"]} agregados.')
 

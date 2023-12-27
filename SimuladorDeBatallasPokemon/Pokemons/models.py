@@ -1,4 +1,3 @@
-#setup necesario para utilizar cosas de settings.py
 import os
 if __name__ == '__main__':
     os.environ['DJANGO_SETTINGS_MODULE'] = 'SimuladorDeBatallasPokemon.SimuladorDeBatallasPokemon.settings'
@@ -6,6 +5,7 @@ if __name__ == '__main__':
     django.setup()
 
 from django.db import models
+from Equipos.models import EquipoPokemon
 
 class Movimiento(models.Model):
     nombre = models.CharField(max_length=50)
@@ -25,7 +25,7 @@ class EspeciePokemon(models.Model):
     ataqueBase = models.IntegerField(default=50)
     defensaBase = models.IntegerField(default=30)
     ataqueEspecialBase = models.IntegerField(default=50)
-    defensaEspecialBase = models.IntegerField(default=30)    
+    defensaEspecialBase = models.IntegerField(default=30)
     velocidadBase = models.IntegerField(default=100)
 
     movimientos = models.ManyToManyField(Movimiento)
@@ -43,5 +43,10 @@ class Pokemon(models.Model):
     defensa = models.IntegerField(default=100)
     ataqueEspecial = models.IntegerField(default=100)
     defensaEspecial = models.IntegerField(default=100)
-    velocidad= models.IntegerField(default=100)
-    especie = models.ForeignKey(EspeciePokemon, on_delete=models.CASCADE)
+    velocidad = models.IntegerField(default=100)
+
+    nivel = models.IntegerField(default=100)
+    especie = models.ForeignKey(EspeciePokemon, on_delete=models.CASCADE, null=True)
+    equipo = models.ForeignKey(EquipoPokemon, on_delete=models.CASCADE, null=True)
+
+    movimientos = models.ManyToManyField(Movimiento)
