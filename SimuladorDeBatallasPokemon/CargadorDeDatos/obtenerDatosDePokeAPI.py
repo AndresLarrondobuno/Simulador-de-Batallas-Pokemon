@@ -1,3 +1,31 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e7a610b1b62b99b4ad108a439f9bbe5285dd2146838c08eaed73ddc7ea8dda8b
-size 946
+import sys
+sys.path.append(r'C:\programacion\BatallasPokemonMVC\SimuladorDeBatallasPokemon')
+import json as json
+import requests_cache
+from CargadorDeDatos.cargadorDeDatos import CargadorDeDatos
+
+
+requests_cache.install_cache('C:\programacion\BatallasPokemonMVC\SimuladorDeBatallasPokemon\CargadorDeDatos\CachePokemonsGeneracionUno.sqlite')
+
+print("Iniciando solicitudes a la API...")
+
+def obtenerDatosDePokemons() -> list:
+    datosPokemons = []
+
+    for id in range(1, 501):
+        datosPokemon = CargadorDeDatos.cargarDatosDePokemon(id)
+        datosPokemons.append(datosPokemon)
+    return datosPokemons
+
+
+def obtenerDatosDeMovimientos() -> list:
+    datosMovimientos = []
+
+    for id in range(1, 300):
+        datosMovimiento = CargadorDeDatos.cargarDatosDeMovimiento(id)
+        datosMovimientos.append(datosMovimiento)
+    return datosMovimientos
+
+
+DATOS_POKEMONS = obtenerDatosDePokemons()
+DATOS_MOVIMIENTOS = obtenerDatosDeMovimientos()

@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:24b7d6c72bb6796088fc44e0ddc34278711ad8e5788c5d2569d15c5f50f2f9bc
-size 289
+{% extends 'index.html' %}
+
+
+
+{% block contenido %}
+
+    <h2>Registra tu usuario</h2>
+
+    <form method="post" action="{% url 'Usuarios:registrarUsuario' %}">
+        {% csrf_token %}
+        {{ formulario }}
+        <input type="submit"  value="Crear Usuario">
+    </form>
+
+{% endblock %}

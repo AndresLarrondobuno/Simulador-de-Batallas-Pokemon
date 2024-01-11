@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7c676b0cd748feb05840ccc6a30d172c2974d1d39acdbb4cca7e65e7fde7d09b
-size 429
+"""
+WSGI config for SimuladorDeBatallasPokemon project.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
+"""
+
+import os
+
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SimuladorDeBatallasPokemon.settings')
+
+application = get_wsgi_application()

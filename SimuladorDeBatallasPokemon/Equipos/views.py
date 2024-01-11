@@ -39,7 +39,7 @@ def crearEquipo(request):
         return render(request, "creacionDeEquipo.html")
 
     return HttpResponse('')
-'''por algun motivo no puedo dejar sin valor de retorno la vista, por mas de
+'''por algun motivo no puedo dejar sin valor de retorno la vista, por mas
 maneje la redireccion del lado del cliente'''
 
 
@@ -68,6 +68,7 @@ def obtenerPokemonAPartirDeEspecie(nombre, equipo) -> Pokemon:
 def listarEquipos(request):
     usuario = request.user
     perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
+    perfilUsuario.equipopokemon_set.all()
     return render(request, 'equipos.html', {'usuario':perfilUsuario})
 
 

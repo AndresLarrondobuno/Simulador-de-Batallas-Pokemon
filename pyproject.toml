@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:02a7541925298d7f1b8fd750bdecacf11bd8f0bb684719d35b20de76fe0320f9
-size 356
+[tool.poetry]
+name = "simulador de batallas online"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "^4.2.5"
+djangorestframework = "^3.14.0"
+requests-cache = "^1.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

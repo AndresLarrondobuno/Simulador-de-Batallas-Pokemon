@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2ed30c7619c743d9e600371fdf4f413ff7e69c246c4f708fd01ac3b29497de2a
-size 429
+"""
+ASGI config for SimuladorDeBatallasPokemon project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
+"""
+
+import os
+
+from django.core.asgi import get_asgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SimuladorDeBatallasPokemon.settings')
+
+application = get_asgi_application()

@@ -1,3 +1,27 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1bbf0095cae6fd472ae065d56b42791335ea57ab56216708b5fd8d5ca05fb6ce
-size 714
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+    <div>
+        <h3>{{ pokemon.nombre | safe }}</h3>
+        <br>
+        <div>
+            Vida: {{ pokemon.vidaBase | safe }}
+            Ataque: {{ pokemon.ataqueBase | safe }}
+            Defensa: {{ pokemon.defensaBase | safe }}
+            Ataque Especial: {{ pokemon.ataqueEspecialBase  | safe }}
+            Defensa Especial: {{ pokemon.defensaEspecialBase | safe }}
+            Velocidad: {{ pokemon.velocidadBase | safe }}
+        </div>
+        <br>
+        <div>
+            {% for movimiento in pokemon.movimientos.all %}
+                {{ movimiento.nombre }}
+
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

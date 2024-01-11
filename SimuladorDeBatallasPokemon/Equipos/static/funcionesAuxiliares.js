@@ -34,12 +34,8 @@ function getCookie(name) {
 }
 
 function todosLosCaracteresSonEspacios(cadena) {
-    for (let caracter of cadena) {
-        if (caracter !== ' ') {
-            return false;
-        }
-    }
-    return true;
+    
+    return cadena === cadena.trim();
 }
 
 function equipoEsValido(equipo) {

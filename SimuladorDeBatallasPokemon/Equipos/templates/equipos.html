@@ -5,9 +5,13 @@
 {% block contenido %}
 
 
-    {% for equipo in usuario.equipos.all %}
+    {% for equipo in usuario.equipopokemon_set.all %}
+            <h2>Equipo {{ equipo.id }}</h2>
+        {% for pokemon in equipo.pokemon_set.all %}
 
-        {{ equipo }}
+            <h5>{{ pokemon.nombre }}</h5>
+
+        {% endfor %}
         <br>
     {% empty %}
         <h2>Todavía no tenés ningún equipo</h2>
