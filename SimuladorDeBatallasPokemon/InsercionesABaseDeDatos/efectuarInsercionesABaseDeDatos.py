@@ -16,15 +16,18 @@ def insertarEspeciesPokemon():
     for datos in DATOS_FORMATEADOS_DE_POKEMONS:
         poseeTipoSecundario = datos['tipoSecundario']
         especie = EspeciePokemon(
-            nombre=datos['nombre'],
-            tipoPrincipal=datos['tipoPrincipal'],
-            tipoSecundario=datos['tipoSecundario'] if poseeTipoSecundario else '',
-            vidaBase=datos['vida'],
-            ataqueBase=datos['ataque'],
-            defensaBase=datos['defensa'],
-            ataqueEspecialBase=datos['ataqueEspecial'],
-            defensaEspecialBase=datos['defensaEspecial'],
-            velocidadBase=datos['velocidad'],
+            nombre = datos['nombre'],
+            tipoPrincipal = datos['tipoPrincipal'],
+            tipoSecundario = datos['tipoSecundario'] if poseeTipoSecundario else '',
+            vidaBase = datos['vida'],
+            ataqueBase = datos['ataque'],
+            defensaBase = datos['defensa'],
+            ataqueEspecialBase = datos['ataqueEspecial'],
+            defensaEspecialBase = datos['defensaEspecial'],
+            velocidadBase = datos['velocidad'],
+
+            imagenFrente = datos['imagenes']['imagenFrente'],
+            imagenEspalda = datos['imagenes']['imagenEspalda'],
 
             slug = slugify(datos['nombre'])
         )

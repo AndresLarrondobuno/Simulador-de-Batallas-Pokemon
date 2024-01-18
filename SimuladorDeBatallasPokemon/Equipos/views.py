@@ -99,3 +99,7 @@ def buscarMovimiento(request):
 
     resultados = list(resultados)
     return JsonResponse(resultados, safe=False)
+
+
+def testGrid(request):
+    return render(request, 'testGrid.html')

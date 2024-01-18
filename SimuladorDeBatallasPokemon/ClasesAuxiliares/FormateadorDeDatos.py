@@ -19,6 +19,7 @@ class FormateadorDeDatos:
         datosFormateados['defensaEspecial'] = datosDeEstadisticasFormateados['defensaEspecial']
         datosFormateados['velocidad'] = datosDeEstadisticasFormateados['velocidad']
         datosFormateados['movimientos'] = nombresDeMovimientosAdquiribles
+        datosFormateados['imagenes'] = datosPokemon['imagenes']
         return datosFormateados
 
     
@@ -53,11 +54,7 @@ class FormateadorDeDatos:
         else:
             datosFormateados['tipoSecundario'] = None
         return datosFormateados
-    
 
-    def formatearDatosDeImagenes():
-        pass
-    
 
     def obtenerNombresDeMovimientosAdquiriblesDe(datosPokemon: dict) -> list:
         datosMovimientos = datosPokemon['moves']

@@ -4,6 +4,8 @@
 
 {% block contenido %}
 
+    <div class="container">
+
     <h2>Crea tu equipo</h2>
 
     <form id="formularioCrearEquipo" method="post">
@@ -11,22 +13,21 @@
         <div id="contenedorPrincipal">
 
             <div id="contenedorPokemon">
-                <input id="busquedaPokemon" type="text" >
+                <input id="busquedaPokemon" type="text">
                 <select id="opcionesPokemon"></select>
-                <button id="agregarPokemon" type="button" >Agregar Pokemon</button>
+                <button id="agregarPokemon" type="button">Agregar Pokemon</button>
             </div>
             
             <br>
-
-            <div>
-                <button type="button" id="botonGuardarEquipo" >Crear Equipo</button>
-            </div>
-
-            <br>
+        </div>
+    
+        <div>
+            <button class="btn-primary" id="botonGuardarEquipo" >Crear Equipo</button>
         </div>
 
     </form>
 
+    </div>
     <script type="module" src="{% static 'solicitudesAJAX.js' %}"></script>
     <script type="module" src="{% static 'agregarPokemonAEquipo.js' %}"></script>
 

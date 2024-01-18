@@ -24,11 +24,19 @@ class FormateadorDeStrings:
 
     @staticmethod
     def formatearUrlParaConsumirRecursoDeAPI(url: str, metodoDeIdentificacion: int|str) -> str:
-        #no se puede guardar en cookies para el usuario?
         if isinstance(metodoDeIdentificacion, int):
             url = os.path.join(url, str(metodoDeIdentificacion))
         elif isinstance(metodoDeIdentificacion, str):
             url = os.path.join(url, metodoDeIdentificacion)
         else:
             raise ValueError("El argumento debe ser un ID numérico o el nombre del recurso como string")
+        return url
+
+
+    @staticmethod
+    def formatearUrlDeImagenParaConsumirRecursoDeAPI(url: str, metodoDeIdentificacion: int|str) -> str:
+        if isinstance(metodoDeIdentificacion, int):
+            url = os.path.join(url, str(metodoDeIdentificacion)) + '.png'
+        else:
+            raise ValueError("El argumento debe ser un ID numérico")
         return url

@@ -24,6 +24,7 @@
 
             {% if request.user.is_authenticated %}
                 <a class="navbar-brand" href="{% url 'Equipos:listarEquipos' %}"> Mis Equipos </a>
+                <a class="navbar-brand" href="{% url 'Equipos:crearEquipo' %}"> Creá un Equipo </a>
             {% endif %}
 
             {% if request.user.is_authenticated %}

@@ -4,10 +4,12 @@ from ClasesAuxiliares.FormateadorDeStrings import FormateadorDeStrings
 URL_POKEMONS = 'https://pokeapi.co/api/v2/pokemon/'
 URL_ESPECIES_POKEMON = 'https://pokeapi.co/api/v2/pokemon-species/'
 URL_CADENA_EVOLUTIVA = 'https://pokeapi.co/api/v2/evolution-chain/'
-URL_TIPOS = f'https://pokeapi.co/api/v2/type/'
-URL_MOVIMIENTOS = f'https://pokeapi.co/api/v2/move/'
-URL_ESTADISTICAS = f'https://pokeapi.co/api/v2/stat/'
-URL_ITEMS = f'https://pokeapi.co/api/v2/item'
+URL_TIPOS = 'https://pokeapi.co/api/v2/type/'
+URL_MOVIMIENTOS = 'https://pokeapi.co/api/v2/move/'
+URL_ESTADISTICAS = 'https://pokeapi.co/api/v2/stat/'
+URL_ITEMS = 'https://pokeapi.co/api/v2/item'
+URL_IMAGENES_FRENTE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'
+URL_IMAGENES_ESPALDA = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/'
 
 
 class CargadorDeDatos:
@@ -49,3 +51,12 @@ class CargadorDeDatos:
         url = FormateadorDeStrings.formatearUrlParaConsumirRecursoDeAPI(URL_ESTADISTICAS, metodoDeIdentificacion)
         respuesta = requests.get(url)
         return respuesta.json()
+
+
+    def cargarDatosDeImagenes(metodoDeIdentificacion: int|str) -> dict:
+        urlImagenesFrente = FormateadorDeStrings.formatearUrlDeImagenParaConsumirRecursoDeAPI(URL_IMAGENES_FRENTE, metodoDeIdentificacion)
+        urlImagenesEspalda = FormateadorDeStrings.formatearUrlDeImagenParaConsumirRecursoDeAPI(URL_IMAGENES_ESPALDA, metodoDeIdentificacion)
+        respuestaImagenFrente = requests.get(urlImagenesFrente)
+        respuestaImagenEspalda = requests.get(urlImagenesEspalda)
+        imagenes = {"imagenFrente": respuestaImagenFrente.content, "imagenEspalda": respuestaImagenEspalda.content}
+        return imagenes

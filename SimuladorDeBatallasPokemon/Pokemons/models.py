@@ -6,6 +6,10 @@ if __name__ == '__main__':
 
 from django.db import models
 from Equipos.models import EquipoPokemon
+from PIL import Image
+from io import BytesIO
+import base64
+
 
 class Movimiento(models.Model):
     nombre = models.CharField(max_length=50)
@@ -31,6 +35,26 @@ class EspeciePokemon(models.Model):
     movimientos = models.ManyToManyField(Movimiento)
 
     slug = models.SlugField()
+
+    imagenFrente  = models.BinaryField(null=True, blank=True)
+    imagenEspalda  = models.BinaryField(null=True, blank=True)
+
+
+    def _obtenerImagen(self, contenidoBinario):
+        if contenidoBinario:
+            imagen = Image.open(BytesIO(contenidoBinario))
+            buffer = BytesIO()
+            imagen.save(buffer, format='PNG')
+            imgStr = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            return imgStr
+    
+
+    def obtenerImagenFrente(self):
+        return self._obtenerImagen(self.imagenFrente)
+    
+
+    def obtenerImagenEspalda(self):
+        return self._obtenerImagen(self.imagenEspalda)
 
 
 class Pokemon(models.Model):

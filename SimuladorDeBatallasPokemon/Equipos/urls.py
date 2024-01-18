@@ -1,5 +1,5 @@
 from django.urls import re_path
-from .views import crearEquipo, buscarPokemon, listarEquipos, buscarMovimiento
+from .views import crearEquipo, buscarPokemon, listarEquipos, buscarMovimiento, testGrid
 
 app_name = 'Equipos'
 
@@ -8,4 +8,6 @@ urlpatterns = [
     re_path(r'^crearEquipo/$', crearEquipo, name='crearEquipo'),
     re_path(r'^buscarPokemon/$', buscarPokemon, name='buscarPokemon'),
     re_path(r'^buscarMovimiento/$', buscarMovimiento, name='buscarMovimiento'),
+    re_path(r'^test/$', testGrid, name='testGrid'),
+
 ]
