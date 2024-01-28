@@ -113,3 +113,4 @@ body.insertBefore(contenedorSeleccionDePokemons, null);
 botonAgregarPokemon.addEventListener("click", agregarPokemonAEquipo);
 inputBusquedaPokemon.addEventListener("input", buscarPokemonPorSubstring);
 formularioCrearEquipo.addEventListener("submit", (event) => {guardarEquipo(event, equipo)});
+//cambio
