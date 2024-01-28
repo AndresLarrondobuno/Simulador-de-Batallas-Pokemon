@@ -4,7 +4,6 @@ import {buscarPokemonPorSubstring, buscarMovimientoPorSubstring, guardarEquipo} 
 var equipo = [];
 const tamano = 2;
 
-
 class Pokemon {
     constructor(nombre, movimientos=[]) {
         this._nombre = nombre;
@@ -104,7 +103,8 @@ var body = document.getElementById("cuerpo");
 var inputBusquedaPokemon = document.getElementById("busquedaPokemon");
 var selectOpcionesPokemon = document.getElementById("opcionesPokemon");
 var botonAgregarPokemon = document.getElementById("agregarPokemon");
-var botonGuardarEquipo = document.getElementById("botonGuardarEquipo");
+var formularioCrearEquipo = document.getElementById('formularioCrearEquipo');
+
 
 var contenedorSeleccionDePokemons = document.createElement("div");
 contenedorSeleccionDePokemons.setAttribute("id", "contenedorSeleccionDePokemons");
@@ -112,4 +112,4 @@ body.insertBefore(contenedorSeleccionDePokemons, null);
 
 botonAgregarPokemon.addEventListener("click", agregarPokemonAEquipo);
 inputBusquedaPokemon.addEventListener("input", buscarPokemonPorSubstring);
-botonGuardarEquipo.addEventListener("click", (event) => {guardarEquipo(event, equipo)});
+formularioCrearEquipo.addEventListener("submit", (event) => {guardarEquipo(event, equipo)});

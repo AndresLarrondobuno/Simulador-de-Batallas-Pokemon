@@ -12,7 +12,7 @@ print("Iniciando solicitudes a la API...")
 def obtenerDatosDePokemons() -> list:
     datosPokemons = []
 
-    for id in range(1, 300):
+    for id in range(1, 500):
         datosPokemon = CargadorDeDatos.cargarDatosDePokemon(id)
         imagenes = CargadorDeDatos.cargarDatosDeImagenes(id)
         datosPokemon['imagenes'] = imagenes

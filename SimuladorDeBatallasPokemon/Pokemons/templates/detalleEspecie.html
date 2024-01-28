@@ -4,25 +4,43 @@
 
 {% block contenido %}
 
-    <div>
-        <h3>{{ especie.nombre }}</h3>
-        <img src="data:image/png;base64,{{ especie.obtenerImagenFrente }}" alt="{{ especie.nombre }}">
+    <div class="container">
+
+        <div class="container">
+
+            <h1>{{ especie }}</h1>
+            
+            <img class="img-fluid rounded border" src="data:image/png;base64,{{ especie.obtenerImagenFrente }}" alt="{{ especie }}">
+
+        </div>
+
         <br>
-        <div>
+
+        <div class="container rounded border">
+
+            <h4>Estadísticas</h4>
             Vida: {{ especie.vidaBase }}
             Ataque: {{ especie.ataqueBase }}
             Defensa: {{ especie.defensaBase }}
             Ataque Especial: {{ especie.ataqueEspecialBase }}
             Defensa Especial: {{ especie.defensaEspecialBase }}
             Velocidad: {{ especie.velocidadBase }}
+
         </div>
+
         <br>
-        <div>
+
+        <div class="container rounded border">
+
+            <h4>Movimientos</h4>
+
             {% for movimiento in especie.movimientos.all %}
-                {{ movimiento.nombre }}
+
+                {{ movimiento }}
 
             {% endfor %}
         </div>
+        
     </div>
 
 {% endblock %}

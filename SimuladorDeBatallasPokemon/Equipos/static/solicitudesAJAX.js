@@ -43,12 +43,15 @@ function buscarMovimientoPorSubstring() {
 
 
 function guardarEquipo(event, equipo) {
+    event.preventDefault();
+
     var equipoValido = equipoEsValido(equipo);
 
     if (equipoValido) {
         var url = "/equipos/crearEquipo/";
         var xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
+
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
 
         var primerPokemon = equipo[0];
@@ -57,13 +60,14 @@ function guardarEquipo(event, equipo) {
 
         var datos = {
             "primerPokemon": {"nombre":primerPokemon.nombre, "movimientos":primerPokemon.movimientos},
-            "segundoPokemon": {"nombre":segundoPokemon.nombre, "movimientos":segundoPokemon.movimientos},
-            "csrftoken":csrftoken
+            "segundoPokemon": {"nombre":segundoPokemon.nombre, "movimientos":segundoPokemon.movimientos}
         };
 
         var jsonDatos = JSON.stringify(datos);
+        console.log(jsonDatos);
 
         xhr.onreadystatechange = function () {
+
             if (this.readyState == 4 && this.status == 200) {
                 console.log("tu equipo fue creado con exito!");
                 console.log(equipo);
@@ -71,11 +75,15 @@ function guardarEquipo(event, equipo) {
                 window.location.href = '/equipos/'; //se encarga de la redireccion del lado del cliente
             }
         };
+
+
         xhr.send(jsonDatos);
     }
+
     else {
         console.log("el equipo no es valido.");
     }
+
 }
 
 

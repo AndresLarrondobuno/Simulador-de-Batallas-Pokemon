@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+
+    <p>Batalla epica #{{ id }}</p>
+
+    <br>
+
+    <form id="formularioDePrueba">
+
+        <input type="text" name="inputDePrueba">
+
+    </form>
+
+    <div id="contenedorMensajes">
+        
+    </div>
+
+    <script type="module" src="{% static 'websockets.js' %}"></script>
+
+{% endblock %}

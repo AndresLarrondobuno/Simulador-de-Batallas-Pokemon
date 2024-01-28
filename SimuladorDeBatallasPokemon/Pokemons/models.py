@@ -19,6 +19,9 @@ class Movimiento(models.Model):
 
     slug = models.SlugField()
 
+    def __str__(self) -> str:
+        return self.nombre.title()
+
 
 class EspeciePokemon(models.Model):
     nombre = models.CharField(max_length=50)
@@ -38,6 +41,10 @@ class EspeciePokemon(models.Model):
 
     imagenFrente  = models.BinaryField(null=True, blank=True)
     imagenEspalda  = models.BinaryField(null=True, blank=True)
+
+
+    def __str__(self) -> str:
+        return self.nombre.title()
 
 
     def _obtenerImagen(self, contenidoBinario):

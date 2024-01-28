@@ -6,19 +6,19 @@ from Usuarios.models import PerfilUsuario
 import json
 
 def crearEquipo(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         datosDecodificados = json.loads(request.body) #deserializa el json a un objeto python (dict)
-
+        
         usuario = request.user
         perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
 
-        equipo = EquipoPokemon(nombre="test", tamano=2, perfilUsuario=perfilUsuario)
+        equipo = EquipoPokemon(nombre="Equipo", tamano=2, perfilUsuario=perfilUsuario)
         equipo.save()
 
-        nombrePrimerPokemon = datosDecodificados['primerPokemon']['nombre']
-        nombreSegundoPokemon = datosDecodificados['segundoPokemon']['nombre']
-        nombresDeMovimientosPrimerPokemon = datosDecodificados['primerPokemon']['movimientos']
-        nombresDeMovimientosSegundoPokemon = datosDecodificados['segundoPokemon']['movimientos']
+        nombrePrimerPokemon = datosDecodificados["primerPokemon"]["nombre"]
+        nombreSegundoPokemon = datosDecodificados["segundoPokemon"]["nombre"]
+        nombresDeMovimientosPrimerPokemon = datosDecodificados["primerPokemon"]["movimientos"]
+        nombresDeMovimientosSegundoPokemon = datosDecodificados["segundoPokemon"]["movimientos"]
 
         primerPokemon = obtenerPokemonAPartirDeEspecie(nombrePrimerPokemon, equipo)
         segundoPokemon = obtenerPokemonAPartirDeEspecie(nombreSegundoPokemon, equipo)
@@ -31,12 +31,11 @@ def crearEquipo(request):
 
         primerPokemon.movimientos.set(movimientosPrimerPokemon)
         segundoPokemon.movimientos.set(movimientosSegundoPokemon)
-
-
-
-    elif request.method == 'GET':
+    elif request.method == "GET":
         #renderiza el formulario para llenarlo
         return render(request, "creacionDeEquipo.html")
+
+
 
     return HttpResponse('')
 '''por algun motivo no puedo dejar sin valor de retorno la vista, por mas
@@ -99,7 +98,3 @@ def buscarMovimiento(request):
 
     resultados = list(resultados)
     return JsonResponse(resultados, safe=False)
-
-
-def testGrid(request):
-    return render(request, 'testGrid.html')

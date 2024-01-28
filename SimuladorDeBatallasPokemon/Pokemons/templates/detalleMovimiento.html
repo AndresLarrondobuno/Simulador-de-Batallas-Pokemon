@@ -5,20 +5,25 @@
 {% block contenido %}
 
     <div>
-        <h3>{{ movimiento.nombre | safe }}</h3>
+
+        <h2>{{ movimiento }}</h2>
+
         <br>
+
         <div>
-            {{ movimiento.tipo | safe }}
-            {{ movimiento.potencia | safe }}
-            {{ movimiento.precision | safe }}
+            Tipo {{ movimiento.tipo }}
+            Potencia {{ movimiento.potencia }}
+            Precision {{ movimiento.precision }}
         </div>
+
         <br>
+
         <div>
-            {% for pokemon in movimiento.pokemons.all %}
-                {{ pokemon.nombre }}
-                <br>
+            {% for especie in movimiento.especiepokemon_set.all %}
+                {{ especie }}
             {% endfor %}
         </div>
+
     </div>
 
 {% endblock %}
