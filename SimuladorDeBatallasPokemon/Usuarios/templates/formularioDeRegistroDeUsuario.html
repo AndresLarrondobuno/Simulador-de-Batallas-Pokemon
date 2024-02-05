@@ -3,13 +3,20 @@
 
 
 {% block contenido %}
-
+    <div class="contenedor">
     <h2>Registra tu usuario</h2>
+    </div>
 
-    <form method="post" action="{% url 'Usuarios:registrarUsuario' %}">
-        {% csrf_token %}
-        {{ formulario }}
-        <input type="submit"  value="Crear Usuario">
-    </form>
+    <div class="contenedorConFondo1">
+
+        
+
+        <form method="post" action="{% url 'Usuarios:registrarUsuario' %}">
+            {% csrf_token %}
+            {{ formulario.as_p }}
+            <input type="submit"  value="Crear Usuario">
+        </form>
+
+    </div>
 
 {% endblock %}

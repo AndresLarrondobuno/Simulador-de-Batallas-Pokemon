@@ -4,21 +4,25 @@
 
 {% block contenido %}
 
+    <div>
+    <h2 id="tituloBatalla" data-id="{{ id }}" >Sala de Batalla #{{ id }}</h2>
 
-    <p>Batalla epica #{{ id }}</p>
+        <br>
 
+        <form id="formularioDePrueba">
+
+            <input type="text" name="contenido">
+
+        </form>
+
+    </div>
+    
     <br>
 
-    <form id="formularioDePrueba">
-
-        <input type="text" name="inputDePrueba">
-
-    </form>
-
-    <div id="contenedorMensajes">
-        
+    <div class="container border" id="contenedorMensajes">
+        <h3 class="text center">Chat</h3>
     </div>
 
-    <script type="module" src="{% static 'websockets.js' %}"></script>
+    <script type="module" src="{% static 'websocketsBatallas.js' %}"></script>
 
 {% endblock %}

@@ -1,100 +1,69 @@
 from django.shortcuts import render, HttpResponse
-from django.http import JsonResponse
 from .models import EquipoPokemon
-from Pokemons.models import Movimiento, Pokemon, EspeciePokemon
+from Pokemons.models import Movimiento, EspeciePokemon
+from Pokemons.views import PokemonsController
 from Usuarios.models import PerfilUsuario
 import json
 
-def crearEquipo(request):
-    if request.method == "POST":
-        datosDecodificados = json.loads(request.body) #deserializa el json a un objeto python (dict)
-        
+#no puedo dejar sin valor de retorno a una vista, por mas maneje la redireccion del lado del cliente
+#si el valor de retorno es un HttpResponse('') vacio, la consola indica un error "failed loading POST request"
+
+class EquiposController():
+
+    def crearEquipo(self, request):
+        if request.method == "POST":
+            datosDecodificados = json.loads(request.body)
+            
+            usuario = request.user
+            perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
+
+            cantidadDeEquipos = EquipoPokemon.objects.filter(perfilUsuario=perfilUsuario).count()
+            
+            nombre = datosDecodificados["nombre"] if datosDecodificados["nombre"] else f"Equipo {cantidadDeEquipos + 1}"
+
+            equipo = EquipoPokemon.objects.create(nombre=nombre, tamano=2, perfilUsuario=perfilUsuario)
+
+            nombrePrimerPokemon = datosDecodificados["primerPokemon"]["nombre"]
+            nombreSegundoPokemon = datosDecodificados["segundoPokemon"]["nombre"]
+            nombresDeMovimientosPrimerPokemon = datosDecodificados["primerPokemon"]["movimientos"]
+            nombresDeMovimientosSegundoPokemon = datosDecodificados["segundoPokemon"]["movimientos"]
+            
+            especiePrimerPokemon = EspeciePokemon.objects.get(nombre=nombrePrimerPokemon)
+            especieSegundoPokemon = EspeciePokemon.objects.get(nombre=nombreSegundoPokemon)
+
+            primerPokemon = PokemonsController.obtenerPokemonAPartirDeEspecie(nombrePrimerPokemon)
+            segundoPokemon = PokemonsController.obtenerPokemonAPartirDeEspecie(nombreSegundoPokemon)
+
+            movimientosPrimerPokemon = Movimiento.objects.filter(nombre__in=nombresDeMovimientosPrimerPokemon)
+            movimientosSegundoPokemon = Movimiento.objects.filter(nombre__in=nombresDeMovimientosSegundoPokemon)
+
+            primerPokemon.especie = especiePrimerPokemon
+            segundoPokemon.especie = especieSegundoPokemon
+
+            primerPokemon.equipo = equipo #debo determinar la relacion pokemon-equipo antes de guardar al pokemon
+            segundoPokemon.equipo = equipo #porque asi funcionan las relaciones oneToMany y oneToOne en Django
+
+            primerPokemon.save()
+            segundoPokemon.save()
+
+            primerPokemon.movimientos.set(movimientosPrimerPokemon) #aca puedo setear los movimientos luego de guardar
+            segundoPokemon.movimientos.set(movimientosSegundoPokemon) #a los pokemon ya que es relacion ManyToMany
+
+
+        elif request.method == "GET":
+            return render(request, "creacionDeEquipo.html")
+
+
+        resultadoDeSolicitud = {
+            "status": "success",
+            "message": "El equipo se creó correctamente.",
+            "perfilUsuario": perfilUsuario
+        }
+        return HttpResponse(resultadoDeSolicitud)
+
+
+    def listarEquipos(self, request):
         usuario = request.user
         perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
-
-        equipo = EquipoPokemon(nombre="Equipo", tamano=2, perfilUsuario=perfilUsuario)
-        equipo.save()
-
-        nombrePrimerPokemon = datosDecodificados["primerPokemon"]["nombre"]
-        nombreSegundoPokemon = datosDecodificados["segundoPokemon"]["nombre"]
-        nombresDeMovimientosPrimerPokemon = datosDecodificados["primerPokemon"]["movimientos"]
-        nombresDeMovimientosSegundoPokemon = datosDecodificados["segundoPokemon"]["movimientos"]
-
-        primerPokemon = obtenerPokemonAPartirDeEspecie(nombrePrimerPokemon, equipo)
-        segundoPokemon = obtenerPokemonAPartirDeEspecie(nombreSegundoPokemon, equipo)
-
-        primerPokemon.save()
-        segundoPokemon.save()
-
-        movimientosPrimerPokemon = Movimiento.objects.filter(nombre__in=nombresDeMovimientosPrimerPokemon)
-        movimientosSegundoPokemon = Movimiento.objects.filter(nombre__in=nombresDeMovimientosSegundoPokemon)
-
-        primerPokemon.movimientos.set(movimientosPrimerPokemon)
-        segundoPokemon.movimientos.set(movimientosSegundoPokemon)
-    elif request.method == "GET":
-        #renderiza el formulario para llenarlo
-        return render(request, "creacionDeEquipo.html")
-
-
-
-    return HttpResponse('')
-'''por algun motivo no puedo dejar sin valor de retorno la vista, por mas
-maneje la redireccion del lado del cliente'''
-
-
-def obtenerPokemonAPartirDeEspecie(nombre, equipo) -> Pokemon:
-    especie = EspeciePokemon.objects.get(nombre=nombre)
-
-    pokemon = Pokemon(
-        nombre = nombre,
-        tipoPrincipal = especie.tipoPrincipal,
-        tipoSecundario = especie.tipoSecundario,
-
-        vida = especie.vidaBase,
-        ataque = especie.ataqueBase,
-        defensa = especie.defensaBase,
-        ataqueEspecial = especie.ataqueEspecialBase,
-        defensaEspecial = especie.defensaEspecialBase,
-        velocidad = especie.velocidadBase,
-        nivel = 50,
-
-        especie = especie,
-        equipo = equipo
-    )
-    return pokemon
-
-
-def listarEquipos(request):
-    usuario = request.user
-    perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
-    perfilUsuario.equipopokemon_set.all()
-    return render(request, 'equipos.html', {'usuario':perfilUsuario})
-
-
-def buscarPokemon(request):
-    print('VISTA buscarPokemon')
-    if request.method == 'GET':
-        busqueda = request.GET.get('busqueda', '')
-
-        if busqueda:
-            resultados = EspeciePokemon.objects.filter(nombre__istartswith=busqueda).values_list('nombre', flat=True)
-            print(f"busqueda: .{busqueda}.")
-        else:
-            resultados = EspeciePokemon.objects.all().values_list('nombre', flat=True)
-
-        resultados = list(resultados)
-        return JsonResponse(resultados, safe=False)
-
-
-def buscarMovimiento(request):
-    busqueda = request.GET.get('busqueda', '')
-    nombrePokemon = request.GET.get('nombrePokemon', '')
-    pokemon = EspeciePokemon.objects.get(nombre=nombrePokemon)
-
-    if busqueda:
-        resultados = pokemon.movimientos.filter(nombre__istartswith=busqueda).values_list('nombre', flat=True)
-    else:
-        resultados = pokemon.movimientos.all().values_list('nombre', flat=True)
-
-    resultados = list(resultados)
-    return JsonResponse(resultados, safe=False)
+        perfilUsuario.equipopokemon_set.all()
+        return render(request, 'equipos.html', {'usuario':perfilUsuario})

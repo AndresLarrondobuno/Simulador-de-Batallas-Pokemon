@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import FomularioDeCreacionDeUsuario
 from django.contrib.auth import login, logout
 
 
 def registrarUsuario(request):
     if request.method == 'POST':
-        formulario = UserCreationForm(request.POST)
+        formulario = FomularioDeCreacionDeUsuario(request.POST)
         if formulario.is_valid():
             print('USUARIO VALIDO')
             usuario = formulario.save()
@@ -15,7 +16,7 @@ def registrarUsuario(request):
         return render(request, 'index.html')
 
     else:
-        formulario = UserCreationForm()
+        formulario = FomularioDeCreacionDeUsuario()
         return render(request, 'formularioDeRegistroDeUsuario.html', {'formulario':formulario})
 
 
@@ -32,6 +33,6 @@ def loguearUsuario(request):
 
 
 def desloguearUsuario(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         logout(request)
     return render(request, "index.html")

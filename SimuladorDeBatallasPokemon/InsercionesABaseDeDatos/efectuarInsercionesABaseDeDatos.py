@@ -10,7 +10,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'SimuladorDeBatallasPokemon.SimuladorDeBa
 django.setup()
 
 from Pokemons.models import EspeciePokemon, Movimiento
-from django.template.defaultfilters import slugify
 
 def insertarEspeciesPokemon():
     for datos in DATOS_FORMATEADOS_DE_POKEMONS:
@@ -28,8 +27,6 @@ def insertarEspeciesPokemon():
 
             imagenFrente = datos['imagenes']['imagenFrente'],
             imagenEspalda = datos['imagenes']['imagenEspalda'],
-
-            slug = slugify(datos['nombre'])
         )
         especie.save()
         print(f'{datos["nombre"]} agregado a la base de datos.')
@@ -51,8 +48,6 @@ def insertarMovimientos():
         tipo = datos['tipo'],
         potencia = datos['potencia'] if potenciaNoEsNula else 0,
         precision = datos['precision'] if precisionNoEsNula else 0,
-
-        slug = slugify(datos['nombre']),
         )
         movimiento.save()
         print(f'{datos["nombre"]} agregado a la base de datos.')

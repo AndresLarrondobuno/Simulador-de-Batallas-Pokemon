@@ -1,4 +1,86 @@
-.imagen-grande {
-    width: 150px;
+html, body {
+    height: 100%;
+}
+
+
+
+img {
+    max-width: 80%;
     height: auto;
+}
+
+body {  
+    background-image: url('/static/imagenes/background.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}  
+
+
+.contenedorConFondo1 {
+    background-color: rgb(116, 221, 221);
+    width: 60%;
+    margin:1% auto 1%;
+    border: 1px solid;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    padding: 0.5vw;
+}
+
+
+.contenedorConFondo2 {
+    background-color: rgb(103, 199, 199);
+    width: 40%;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    padding: 1vw;
+}
+
+.contenedorConBorde {
+    border: 1px solid black;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    padding: 1%;
+}
+
+.contenedor {
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    text-align: center;
+    padding: 0.5vw;
+}
+
+input {
+    margin: 1%;
+    border-radius: 7px;
+
+}
+
+select {
+    margin: 5px;
+    border-radius: 5px;
+
+}
+
+option {
+    font-size: large;
+}
+
+button {
+    margin: 5px;
+    border-radius: 5px;
+
 }

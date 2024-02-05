@@ -8,16 +8,16 @@
 
     {% for equipo in usuario.equipopokemon_set.all %}
 
-    <div class="row border p-2">
+    <div class="row p-2 contenedor">
 
-        <h2>Equipo {{ equipo.id }}</h2>
+        <h3>Equipo {{ equipo.id }}</h3>
 
                 {% for pokemon in equipo.pokemon_set.all %}
 
-                <div class="col border p-2">
+                <div class="col border p-2 contenedorConFondo2">
 
-                    <h5>{{ pokemon.nombre }}</h5>
-                    <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
+                    <h5>{{ pokemon.obtenerNombre }}</h5>
+                    <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
 
                 </div>
 
@@ -25,12 +25,12 @@
 
     </div>
 
-        <br>
+    
 
     {% empty %}
 
         <h2>Todavía no tenés ningún equipo</h2>
-        <a href="{% url 'Equipos:crearEquipo' %}"> Creá tu Equipo </a>
+        <a class="btn border" href="{% url 'Equipos:crearEquipo' %}"> Creá tu Equipo </a>
 
     {% endfor %}
 

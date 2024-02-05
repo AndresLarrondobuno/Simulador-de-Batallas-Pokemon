@@ -9,6 +9,8 @@ from Equipos.models import EquipoPokemon
 from PIL import Image
 from io import BytesIO
 import base64
+from django.template.defaultfilters import slugify
+
 
 
 class Movimiento(models.Model):
@@ -17,7 +19,7 @@ class Movimiento(models.Model):
     potencia = models.IntegerField(default=100)
     precision = models.IntegerField(default=100)
 
-    slug = models.SlugField()
+    slug = models.SlugField(default=slugify(nombre))
 
     def __str__(self) -> str:
         return self.nombre.title()
@@ -37,7 +39,7 @@ class EspeciePokemon(models.Model):
 
     movimientos = models.ManyToManyField(Movimiento)
 
-    slug = models.SlugField()
+    slug = models.SlugField(default=slugify(nombre))
 
     imagenFrente  = models.BinaryField(null=True, blank=True)
     imagenEspalda  = models.BinaryField(null=True, blank=True)
@@ -47,9 +49,15 @@ class EspeciePokemon(models.Model):
         return self.nombre.title()
 
 
-    def _obtenerImagen(self, contenidoBinario):
+    def _obtenerImagen(self, contenidoBinario, porcentaje=None) -> str:
         if contenidoBinario:
             imagen = Image.open(BytesIO(contenidoBinario))
+            if porcentaje:
+                ancho, alto = imagen.size
+                nuevo_ancho = int(ancho * (porcentaje / 100))
+                nuevo_alto = int(alto * (porcentaje / 100))
+                imagen = imagen.resize((nuevo_ancho, nuevo_alto))
+
             buffer = BytesIO()
             imagen.save(buffer, format='PNG')
             imgStr = base64.b64encode(buffer.getvalue()).decode('utf-8')
@@ -60,8 +68,13 @@ class EspeciePokemon(models.Model):
         return self._obtenerImagen(self.imagenFrente)
     
 
-    def obtenerImagenEspalda(self):
-        return self._obtenerImagen(self.imagenEspalda)
+    def obtenerIcono(self):
+        return self._obtenerImagen(self.imagenFrente, porcentaje=75)
+    
+
+    def _obtenerNombre(self):
+        return self.nombre.title()
+    
 
 
 class Pokemon(models.Model):
@@ -77,7 +90,11 @@ class Pokemon(models.Model):
     velocidad = models.IntegerField(default=100)
 
     nivel = models.IntegerField(default=100)
+
     especie = models.ForeignKey(EspeciePokemon, on_delete=models.CASCADE, null=True)
     equipo = models.ForeignKey(EquipoPokemon, on_delete=models.CASCADE, null=True)
-
     movimientos = models.ManyToManyField(Movimiento)
+
+
+    def obtenerNombre(self):
+        return self.nombre.title()

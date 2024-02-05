@@ -1,9 +1,10 @@
-from django.urls import re_path
-from .views import detalleBatalla
+from django.urls import path
+from .views import BatallasController
 
 app_name = 'Batallas'
 
 
 urlpatterns = [
-    re_path(r'^(?P<id>[-\w]+)/$', detalleBatalla, name='detalleBatalla'),
+    path('<str:id>/', BatallasController().detalleBatalla, name='detalleBatalla'),
+    path('buscarBatalla/', BatallasController().buscarBatalla, name='buscarBatalla'),
 ]

@@ -1,90 +1,102 @@
 import {csrftoken,
 agregarOpcionesASelectAPartirDeResultadosDeBusqueda,
-eliminarElementosHijos,
-equipoEsValido} from "./funcionesAuxiliares.js";
+eliminarElementosHijos
+} from "./funcionesAuxiliares.js";
 
 
-function buscarPokemonPorSubstring() {
-    var busqueda = this.value;
-    var elementoSelect = this.nextElementSibling;
+async function buscarPokemonPorSubstring() {
+    let busqueda = this.value;
+    let elementoSelect = this.nextElementSibling;
+    let url = `/equipos/buscarNombresDePokemons/?busqueda=${busqueda}`;
 
-    var url = "/equipos/buscarPokemon/?busqueda=" + busqueda;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
+    const respuesta = await fetch(url);
+    const resultados = await respuesta.json();
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            var resultados = JSON.parse(xhr.responseText);
-            eliminarElementosHijos(elementoSelect);
-            agregarOpcionesASelectAPartirDeResultadosDeBusqueda(elementoSelect, resultados);
-        }
-    };
-    xhr.send();
-}
-
-function buscarMovimientoPorSubstring() {
-    var busqueda = encodeURIComponent(this.value).trim();
-    var nombreDePokemon = this.previousElementSibling.textContent;
-    var elementoSelect = this.nextElementSibling;
-
-    var url = "/equipos/buscarMovimiento/?busqueda=" + busqueda + "&nombrePokemon=" + nombreDePokemon;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            var resultados = JSON.parse(xhr.responseText);
-            eliminarElementosHijos(elementoSelect);
-            agregarOpcionesASelectAPartirDeResultadosDeBusqueda(elementoSelect, resultados);
-        }
-    };
-    xhr.send();
+    if (!resultados.ok) {
+        await eliminarElementosHijos(elementoSelect);
+        await agregarOpcionesASelectAPartirDeResultadosDeBusqueda(elementoSelect, resultados);
+    }
 }
 
 
-function guardarEquipo(event, equipo) {
+async function buscarMovimientoPorSubstring() {
+    let busqueda = this.value.trim();
+    let nombreDePokemon = this.previousElementSibling.textContent.trim();
+    let elementoSelect = this.nextElementSibling;
+
+    let url = `/equipos/buscarNombresDeMovimientos/?busqueda=${busqueda}&nombrePokemon=${nombreDePokemon}`;
+
+    const respuesta = await fetch(url);
+
+    const resultados = await respuesta.json();
+
+    if (!resultados.ok) {
+        await eliminarElementosHijos(elementoSelect);
+
+        await agregarOpcionesASelectAPartirDeResultadosDeBusqueda(elementoSelect, resultados);
+    }
+}
+
+
+async function buscarEspecie(nombrePokemon) {
+    let url = `/pokemons/buscarEspecie/?nombrePokemon=${nombrePokemon}`;
+
+    const respuesta = await fetch(url);
+
+    const resultados = await respuesta.json();
+
+    if (!resultados.ok) {
+        return resultados
+    }
+}
+
+
+async function guardarEquipo(event, equipo) {
     event.preventDefault();
 
-    var equipoValido = equipoEsValido(equipo);
+    let equipoValido = equipo.equipoEsValido();
+    equipo.nombre = document.getElementById("eleccionDeNombreDeEquipo").value;
+    
 
     if (equipoValido) {
-        var url = "/equipos/crearEquipo/";
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
+        let url = "/equipos/crearEquipo/";
 
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-
-        var primerPokemon = equipo[0];
-        var segundoPokemon = equipo[1];
+        let primerPokemon = equipo.integrantes[0];
+        let segundoPokemon = equipo.integrantes[1];
         
-
-        var datos = {
+        let datos = {
+            "nombre": equipo.nombre,
             "primerPokemon": {"nombre":primerPokemon.nombre, "movimientos":primerPokemon.movimientos},
             "segundoPokemon": {"nombre":segundoPokemon.nombre, "movimientos":segundoPokemon.movimientos}
         };
 
-        var jsonDatos = JSON.stringify(datos);
-        console.log(jsonDatos);
+        let jsonDatos = JSON.stringify(datos);
 
-        xhr.onreadystatechange = function () {
-
-            if (this.readyState == 4 && this.status == 200) {
-                console.log("tu equipo fue creado con exito!");
-                console.log(equipo);
-                console.log("datos enviados a servidor: " + jsonDatos);
-                window.location.href = '/equipos/'; //se encarga de la redireccion del lado del cliente
-            }
+        let headers = {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         };
 
+        const respuesta = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: jsonDatos
+        })
 
-        xhr.send(jsonDatos);
-    }
-
+        if (respuesta.ok) {
+            console.log("Tu equipo fue creado con exito!");
+            console.log("Equipo: " + equipo);
+            console.log("Datos enviados a servidor: " + jsonDatos);
+            window.location.href = '/equipos/'; //se encarga de la redireccion del lado del cliente
+        } else {
+            console.log("Hubo un error en la solicitud.");
+        }
+    }    
     else {
-        console.log("el equipo no es valido.");
+        console.log("El equipo no es válido.");
     }
 
 }
 
 
-export {buscarPokemonPorSubstring, buscarMovimientoPorSubstring, guardarEquipo};
+export {buscarPokemonPorSubstring, buscarEspecie, buscarMovimientoPorSubstring, guardarEquipo};
