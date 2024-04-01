@@ -2,26 +2,42 @@
 
 {% load static %}
 
-{% block contenido %}
+{% block contenido_principal %}
 
-    <div>
+    <div class="container">
 
-        <h2>{{ movimiento }}</h2>
+        <div class="contenedorHorizontal">
 
-        <br>
+            <div class="contenedorTextoVertical col p-1">
+                <h5>Nombre</h5> <h6>{{ movimiento }}</h6>
+            </div>
 
-        <div>
-            Tipo {{ movimiento.tipo }}
-            Potencia {{ movimiento.potencia }}
-            Precision {{ movimiento.precision }}
+            <div class="contenedorTextoVertical col p-1">
+                <h5>Tipo</h5> <h6>{{ movimiento.tipo }}</h6>
+            </div>
+
+            <div class="contenedorTextoVertical col p-1">
+                <h5>Potencia</h5> <h6>{{ movimiento.potencia }}</h6>
+            </div>
+
+            <div class="contenedorTextoVertical col p-1">
+                <h5>Precision</h5> <h6>{{ movimiento.precision }}</h6>
+            </div>
+            
         </div>
-
+        
         <br>
 
-        <div>
+        <div class="container">
+
+            <div class="contenedor">
+                <h5>Pokemons que saben usar {{ movimiento }}</h5>
+            </div>
+
             {% for especie in movimiento.especiepokemon_set.all %}
-                {{ especie }}
+            <img class="img" src="data:image/png;base64,{{ especie.obtenerImagenFrente}}" alt="{{ especie }}">
             {% endfor %}
+
         </div>
 
     </div>

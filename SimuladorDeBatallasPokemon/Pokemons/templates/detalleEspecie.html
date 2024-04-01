@@ -2,45 +2,57 @@
 
 {% load static %}
 
-{% block contenido %}
+{% block contenido_principal %}
+    
+    <div class="container row p-2">
 
-    <div class="container">
-
-        <div class="container">
-
+        <div class="col p-2">
+        
             <h1>{{ especie }}</h1>
             
-            <img class="img-fluid rounded border" src="data:image/png;base64,{{ especie.obtenerImagenFrente }}" alt="{{ especie }}">
+            <img class="img" src="data:image/png;base64,{{ especie.obtenerImagenFrente }}" alt="{{ especie }}">
 
         </div>
 
-        <br>
-
-        <div class="container rounded border">
+        <div class="contenedorVertical" class="col p-2">
 
             <h4>Estadísticas</h4>
+        
+            <div class="col p-1">
             Vida: {{ especie.vidaBase }}
+            </div>
+
+            <div class="col p-1">
             Ataque: {{ especie.ataqueBase }}
+            </div>
+
+            <div class="col p-1">
             Defensa: {{ especie.defensaBase }}
+            </div>
+
+            <div class="col p-1">
             Ataque Especial: {{ especie.ataqueEspecialBase }}
+            </div>
+
+            <div class="col p-1">
             Defensa Especial: {{ especie.defensaEspecialBase }}
-            Velocidad: {{ especie.velocidadBase }}
+            </div>
+            
+            <div class="col p-1">
+            Velocidad: {{ especie.vidaBase }}
+            </div>
 
         </div>
 
-        <br>
 
-        <div class="container rounded border">
+        <div class="col p-1">
 
             <h4>Movimientos</h4>
 
             {% for movimiento in especie.movimientos.all %}
-
                 {{ movimiento }}
-
             {% endfor %}
         </div>
         
-    </div>
 
 {% endblock %}

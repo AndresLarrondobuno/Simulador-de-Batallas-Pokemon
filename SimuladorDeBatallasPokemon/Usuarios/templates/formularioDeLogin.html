@@ -1,15 +1,22 @@
 {% extends 'index.html' %}
 
+{% load static %}
 
+{% block contenido_principal %}
 
-{% block contenido %}
+    <div class="contenedor">
+        <h2>Ingresa con tu usuario</h2>
+    </div>
 
-    <h2>Ingresa con tu usuario</h2>
+    <div class="contenedorAnchoMediano fondo2">
 
-    <form action="{% url 'Usuarios:loguearUsuario' %}" method="post">
-        {% csrf_token %}
-        {{ formulario }}
-        <input type="submit"  value="Ingresar">
-    </form>
+        <form id="formularioLogin" method="post">
+            {% csrf_token %}
+            {{ formulario.as_p }}
+            <input type="submit"  value="Ingresar">
+        </form>
 
+    </div>
+
+    <script type="module" src="{% static 'js/logearUsuario.js' %}"></script>
 {% endblock %}

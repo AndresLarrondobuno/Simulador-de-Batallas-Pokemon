@@ -39,6 +39,7 @@ class PokemonsController():
 
 
     def detalleEspecie(self, request, slug):
+        print("SLUG:", slug)
         especie = EspeciePokemon.objects.get(slug=slug)
         return render(request, 'detalleEspecie.html', {'especie':especie})
 

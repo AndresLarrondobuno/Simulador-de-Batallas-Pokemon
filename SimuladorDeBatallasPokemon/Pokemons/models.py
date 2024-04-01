@@ -12,17 +12,22 @@ import base64
 from django.template.defaultfilters import slugify
 
 
-
 class Movimiento(models.Model):
     nombre = models.CharField(max_length=50)
     tipo = models.CharField(max_length=50)
     potencia = models.IntegerField(default=100)
     precision = models.IntegerField(default=100)
 
-    slug = models.SlugField(default=slugify(nombre))
+    slug = models.SlugField()
 
     def __str__(self) -> str:
         return self.nombre.title()
+    
+
+    def save(self, *args, **kwargs):
+        if not self.slug:  # Si el slug no está definido
+            self.slug = slugify(self.nombre)  # Generar slug basado en el nombre
+        super().save(*args, **kwargs)
 
 
 class EspeciePokemon(models.Model):
@@ -39,7 +44,7 @@ class EspeciePokemon(models.Model):
 
     movimientos = models.ManyToManyField(Movimiento)
 
-    slug = models.SlugField(default=slugify(nombre))
+    slug = models.SlugField()
 
     imagenFrente  = models.BinaryField(null=True, blank=True)
     imagenEspalda  = models.BinaryField(null=True, blank=True)
@@ -47,6 +52,12 @@ class EspeciePokemon(models.Model):
 
     def __str__(self) -> str:
         return self.nombre.title()
+    
+
+    def save(self, *args, **kwargs):
+        if not self.slug:  # Si el slug no está definido
+            self.slug = slugify(self.nombre)  # Generar slug basado en el nombre
+        super().save(*args, **kwargs)
 
 
     def _obtenerImagen(self, contenidoBinario, porcentaje=None) -> str:

@@ -9,14 +9,14 @@ class BatallaConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(
             self.room_group_name,
-            self.channel_name
+            self.channel_name,
         )
 
         await self.accept()
 
         text_data=json.dumps({
             'type':'conexion_establecida',
-            'message':'Ahora estas conectado'
+            'message':'Ahora estas conectado',
         })
 
         await self.send(text_data)
@@ -25,36 +25,50 @@ class BatallaConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
-            self.channel_name
+            self.channel_name,
         )
 
-
+    #(2) recibe un json con datos del cliente
     async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        mensaje = text_data_json['mensaje']
-        username = self.scope['user'].username
+        datos_deserializados = json.loads(text_data)
+        mensaje = datos_deserializados['mensaje']
+        tipo = datos_deserializados['type']
 
-        mensajeMarcado = f'{username}: {mensaje}'
-        print("metodo receive ejecutado: " + mensajeMarcado)
-        
+        contexto = {
+            'type': tipo,
+            'message': mensaje,
+        }
+
         await self.channel_layer.group_send(
             self.room_group_name,
-            {
-                'type':'mensajeDeChat',
-                'username':username,
-                'message':mensajeMarcado,
-            }
+            contexto,
         )
 
-
-    async def mensajeDeChat(self, event):
+    #(3) maneja mensajes con type "mensajeDeUsuario"
+    async def mensajeDeUsuario(self, event):
         mensaje = event['message']
-        print(f"metodo mensajeDeChat ejecutado: {mensaje} / consumidor asociado a: {self.scope['user']}")
+        username = self.scope['user'].username
 
+        print(f"metodo mensajeDeUsuario ejecutado: {mensaje} / consumidor asociado a: {self.scope['user']}")
+        
+        mensajeMarcado = f'{username}: {mensaje}'
 
         respuestaJSON = json.dumps({
-            'type':'chat',
-            'message': mensaje
+            'type':'mensajeDeUsuario',
+            'message': mensajeMarcado,
+            'username':username,
+        })
+
+        await self.send(text_data=respuestaJSON)
+
+    #(3) maneja mensajes con type "mensajeDeServidor"
+    async def relatoDeAccionDeBatalla(self, event):
+        mensaje = event['message']
+        print(f"metodo relatoDeAccionDeBatalla ejecutado: {mensaje} / consumidor asociado a: {self.scope['user']}")
+
+        respuestaJSON = json.dumps({
+            'type':'relatoDeAccionDeBatalla',
+            'message': mensaje,
         })
 
         await self.send(text_data=respuestaJSON)

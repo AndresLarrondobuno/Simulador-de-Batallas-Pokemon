@@ -1,23 +1,24 @@
-from django import forms
-from django.contrib.auth.models import User
+from typing import Any
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-class FomularioDeCreacionDeUsuario(forms.Form):
-    nombre_usuario = forms.CharField(label="Nombre de Usuario")
+class FomularioDeCreacionDeUsuario(UserCreationForm):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        
+        self.fields['username'].label = "Nombre de Usuario"
+        self.fields['password1'].label = "Contraseña"
+        self.fields['password2'].label = "Confirmación de contraseña"
 
-    contrasena = forms.CharField(
-        label= "Contraseña",
-        strip= False,
-        widget= forms.PasswordInput,
-        help_text= "La contraseña debe tener almenos 8 caracteres y debe ser una combinación de letras y números."
-        )
-    
-    confirmacion_contrasena = forms.CharField(
-        label= "Confirmación de Contraseña",
-        strip= False,
-        widget= forms.PasswordInput,
-        help_text= "Volve a ingresar tu contraseña."
-        )
+        self.fields['username'].help_text = "Requerido. Letras, digitos y @/./+/-/_ solamente."
+        self.fields['password1'].help_text = "La contraseña debe ser una combinacion de caracteres y números"
+        self.fields['password2'].help_text = "Repetí tu contraseña"
 
-    class Meta:
-        model = User
-        fields = ['nombre_usuario', 'contrasena', 'confirmacion_contrasena']
+
+class FomularioDeAutenticacionDeUsuario(AuthenticationForm):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        
+        self.fields['username'].label = "Nombre de Usuario"
+        self.fields['password'].label = "Contraseña"
+
+        self.fields['password'].help_text = "La contraseña debe ser una combinacion de caracteres y números."

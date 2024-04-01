@@ -10,7 +10,8 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from Batallas.routing import websocket_urlpatterns
+from channels.security.websocket import AllowedHostsOriginValidator
+from Batallas.routing import websocket_urlpatterns_batallas
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SimuladorDeBatallasPokemon.settings')
@@ -21,12 +22,10 @@ django_asgi_app = get_asgi_application()
 # Configuración del enrutador de canales para manejar solicitudes WebSocket.
 application = ProtocolTypeRouter({
     "http": django_asgi_app,  # Ruta predeterminada para solicitudes HTTP normales.
-    "websocket": AuthMiddlewareStack(
+    "websocket": AllowedHostsOriginValidator(AuthMiddlewareStack(
         URLRouter(
-            websocket_urlpatterns
-            # Aquí debes definir tus rutas de WebSocket y el consumidor correspondiente.
-            # Ejemplo:
-            # path("ws/batalla/<str:room_name>/", BatallaConsumer.as_asgi()),
+            websocket_urlpatterns_batallas
         )
     ),
+    )
 })

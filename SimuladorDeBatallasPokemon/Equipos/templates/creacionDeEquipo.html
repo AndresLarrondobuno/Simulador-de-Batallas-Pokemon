@@ -2,21 +2,19 @@
 
 {% load static %}
 
-{% block contenido %}
+{% block contenido_principal %}
 
     <div class="contenedor">
         <h3>Creá tu equipo</h3>
     </div>
 
-    <div class="contenedorConFondo1">
-
+    <div class="contenedorAnchoMediano fondo2 border round">
 
         <form id="formularioCrearEquipo" method="post">
 
             {% csrf_token %}
 
-            <div>
-                
+
                 <input id="eleccionDeNombreDeEquipo" type="text" placeholder="Nombre de Equipo">
 
                 <div id="contenedorBusquedaDePokemons">
@@ -27,7 +25,6 @@
                     
                 </div>
                 
-            </div>
 
                 <button type="submit" class="btn-primary" id="botonGuardarEquipo" >Crear Equipo</button>
 
@@ -35,9 +32,9 @@
 
     </div>
 
-    <script type="module" src="{% static 'creacionDeEquipos.js' %}"></script>
-    <script type="module" src="{% static 'solicitudesAJAX.js' %}"></script>
-    <script type="module" src="{% static 'funcionesAuxiliares.js' %}"></script>
+    <script type="module" src="{% static 'js/solicitudesEquipos.js' %}"></script>
+    <script type="module" src="{% static 'js/creacionDeEquipos.js' %}"></script>
+    <script type="module" src="{% static 'js/funcionesAuxiliares.js' %}"></script>
 
 
 

@@ -6,6 +6,9 @@ app_name = 'Pokemons'
 
 urlpatterns = [
     re_path(r'^buscarEspecie/$', PokemonsController().buscarEspecie, name='buscarEspecie'),
+    re_path(r'^buscarNombresDePokemons/$', PokemonsController().buscarNombresDePokemons, name='buscarNombresDePokemons'),
+    re_path(r'^buscarNombresDeMovimientos/$', PokemonsController().buscarNombresDeMovimientos, name='buscarNombresDeMovimientos'),
     re_path(r'^(?P<slug>[-\w]+)/$', PokemonsController().detalleEspecie, name='detalleEspecie'),
     re_path(r'^movimientos/(?P<slug>[-\w]+)/$', PokemonsController().detalleMovimiento, name='detalleMovimiento'),
+    
 ]

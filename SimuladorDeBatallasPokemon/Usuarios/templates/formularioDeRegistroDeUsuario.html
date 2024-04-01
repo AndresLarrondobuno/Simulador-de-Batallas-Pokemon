@@ -2,14 +2,13 @@
 
 
 
-{% block contenido %}
+{% block contenido_principal %}
+
     <div class="contenedor">
-    <h2>Registra tu usuario</h2>
+        <h2>Registra tu usuario</h2>
     </div>
 
-    <div class="contenedorConFondo1">
-
-        
+    <div class="contenedorAnchoMediano fondo2">
 
         <form method="post" action="{% url 'Usuarios:registrarUsuario' %}">
             {% csrf_token %}

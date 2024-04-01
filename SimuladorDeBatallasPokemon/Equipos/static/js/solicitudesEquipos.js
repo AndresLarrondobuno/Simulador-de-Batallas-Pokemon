@@ -1,13 +1,13 @@
 import {csrftoken,
 agregarOpcionesASelectAPartirDeResultadosDeBusqueda,
 eliminarElementosHijos
-} from "./funcionesAuxiliares.js";
+} from "../../../static/js/funcionesAuxiliares.js";
 
 
 async function buscarPokemonPorSubstring() {
     let busqueda = this.value;
     let elementoSelect = this.nextElementSibling;
-    let url = `/equipos/buscarNombresDePokemons/?busqueda=${busqueda}`;
+    let url = `/pokemons/buscarNombresDePokemons/?busqueda=${busqueda}`;
 
     const respuesta = await fetch(url);
     const resultados = await respuesta.json();
@@ -24,7 +24,7 @@ async function buscarMovimientoPorSubstring() {
     let nombreDePokemon = this.previousElementSibling.textContent.trim();
     let elementoSelect = this.nextElementSibling;
 
-    let url = `/equipos/buscarNombresDeMovimientos/?busqueda=${busqueda}&nombrePokemon=${nombreDePokemon}`;
+    let url = `/pokemons/buscarNombresDeMovimientos/?busqueda=${busqueda}&nombrePokemon=${nombreDePokemon}`;
 
     const respuesta = await fetch(url);
 
@@ -74,13 +74,13 @@ async function guardarEquipo(event, equipo) {
 
         let headers = {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrftoken,
         };
 
         const respuesta = await fetch(url, {
             method: 'POST',
             headers: headers,
-            body: jsonDatos
+            body: jsonDatos,
         })
 
         if (respuesta.ok) {
@@ -97,6 +97,5 @@ async function guardarEquipo(event, equipo) {
     }
 
 }
-
 
 export {buscarPokemonPorSubstring, buscarEspecie, buscarMovimientoPorSubstring, guardarEquipo};

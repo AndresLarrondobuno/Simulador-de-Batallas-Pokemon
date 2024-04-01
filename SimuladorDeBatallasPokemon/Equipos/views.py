@@ -18,7 +18,7 @@ class EquiposController():
             perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
 
             cantidadDeEquipos = EquipoPokemon.objects.filter(perfilUsuario=perfilUsuario).count()
-            
+
             nombre = datosDecodificados["nombre"] if datosDecodificados["nombre"] else f"Equipo {cantidadDeEquipos + 1}"
 
             equipo = EquipoPokemon.objects.create(nombre=nombre, tamano=2, perfilUsuario=perfilUsuario)
@@ -46,8 +46,8 @@ class EquiposController():
             primerPokemon.save()
             segundoPokemon.save()
 
-            primerPokemon.movimientos.set(movimientosPrimerPokemon) #aca puedo setear los movimientos luego de guardar
-            segundoPokemon.movimientos.set(movimientosSegundoPokemon) #a los pokemon ya que es relacion ManyToMany
+            primerPokemon.movimientos.set(movimientosPrimerPokemon) #aca puedo setear los movimientos despues de guardar
+            segundoPokemon.movimientos.set(movimientosSegundoPokemon) #los pokemon porque es una relacion ManyToMany
 
 
         elif request.method == "GET":
@@ -57,7 +57,7 @@ class EquiposController():
         resultadoDeSolicitud = {
             "status": "success",
             "message": "El equipo se creó correctamente.",
-            "perfilUsuario": perfilUsuario
+            "perfilUsuario": perfilUsuario,
         }
         return HttpResponse(resultadoDeSolicitud)
 
@@ -65,5 +65,13 @@ class EquiposController():
     def listarEquipos(self, request):
         usuario = request.user
         perfilUsuario, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
-        perfilUsuario.equipopokemon_set.all()
-        return render(request, 'equipos.html', {'usuario':perfilUsuario})
+
+        if request.path == "/equipos/":
+            return render(request, 'equipos.html', {'usuario':perfilUsuario})
+        
+        elif request.path == "/batallas/buscarBatalla/":
+            return render(request, 'buscarBatalla.html', {'usuario':perfilUsuario})
+
+
+    def buscarEquipo(self, request):
+        pass

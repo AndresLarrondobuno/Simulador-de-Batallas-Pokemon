@@ -2,27 +2,91 @@
 
 {% load static %}
 
-{% block contenido %}
+{% block contenido_principal %}
+
+<h3 class="titulo" id="tituloBatalla" data-id="{{ id }}" data-rol-usuario="{{ rol_usuario }}">
+    Batalla #{{ id }}: {{ usuario_solicitante }} vs {{ usuario_destinatario }}
+</h3>
+
+<div class="contenedorBatalla" id="contenedorBatalla" data-equipo="{{ datos_equipo_usuario_actual }}">
+
+    <div id="equipoSolicitante" class="contenedorEquipoSolicitante" data-equipo-solicitante="{{ datos_equipo_usuario_solicitante }}">
+
+        {% for pokemon in modelo_equipo_solicitante.pokemon_set.all %}
+
+            <div>
+
+                <h5>{{ pokemon.obtenerNombre }}</h5>
+                <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
+                
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div id="equipoDestinatario" class="contenedorEquipoDestinatario" data-equipo-destinatario="{{ datos_equipo_usuario_destinatario }}">
+
+        {% for pokemon in modelo_equipo_destinatario.pokemon_set.all %}
+
+            <div>
+
+                <h5>{{ pokemon.obtenerNombre }}</h5>
+                <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="contenedorPokemon1">
+        <img src="data:image/png;base64,{{ modelo_equipo_solicitante.pokemon_set.first.especie.obtenerImagenFrente }}">
+    </div>
+
+    <div class="contenedorPokemon2">
+        <img src="data:image/png;base64,{{ modelo_equipo_destinatario.pokemon_set.first.especie.obtenerImagenFrente }}">
+    </div>
+
+
+    <div id="contenedorMovimientos" class="contenedorMovimientos" ></div>
+    <div id="contenedorCambioDePokemon" class="contenedorCambioDePokemon" ></div>
+    
+
+</div>
+
+
+<div class="contenedorChat" id="contenedorChat">
+
+    <div class="contenedorAnchoMediano">
+
+        <h3 class="text center">Chat</h3>
+
+    </div>
+
+
+    <div id="contenedorMensajes"></div>
+
 
     <div>
-    <h2 id="tituloBatalla" data-id="{{ id }}" >Sala de Batalla #{{ id }}</h2>
 
         <br>
 
-        <form id="formularioDePrueba">
+        <form class="enviarMensaje" id="formularioParaEnviarMensajeAServidor">
 
             <input type="text" name="contenido">
 
         </form>
 
     </div>
-    
-    <br>
 
-    <div class="container border" id="contenedorMensajes">
-        <h3 class="text center">Chat</h3>
-    </div>
+</div>
 
-    <script type="module" src="{% static 'websocketsBatallas.js' %}"></script>
+
+<script type="module" src="{% static 'js/conexionesWebsocket/iniciarConexionWs.js' %}"></script>
+<script type="module" src="{% static 'js/conexionesWebsocket/wsChat.js' %}"></script>
+<script type="module" src="{% static 'js/batalla/main.js' %}"></script>
+<script type="module" src="{% static 'js/batalla/listeners.js' %}"></script>
 
 {% endblock %}

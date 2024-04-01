@@ -2,38 +2,52 @@
 
 {% load static %}
 
-{% block contenido %}
+{% block equipos %}
 
-<div class="container text-center" >
+<div id="contenedorEquipos" class="contenedor text-center" >
 
     {% for equipo in usuario.equipopokemon_set.all %}
 
-    <div class="row p-2 contenedor">
+        <div class="row p-1 contenedorAnchoMediano rounded border" data-equipo-id="{{ equipo.id }}">
 
-        <h3>Equipo {{ equipo.id }}</h3>
+            <h4> {{ equipo.nombre }} </h4>
 
-                {% for pokemon in equipo.pokemon_set.all %}
+                    {% for pokemon in equipo.pokemon_set.all %}
 
-                <div class="col border p-2 contenedorConFondo2">
+                        <div id="contenedorPokemon" class="contenedorAnchoMediano fondo1">
 
-                    <h5>{{ pokemon.obtenerNombre }}</h5>
-                    <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
+                            <h5>{{ pokemon.obtenerNombre }}</h5>
+                            <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
 
-                </div>
+                        </div>
 
-                {% endfor %}
+                    {% endfor %}
 
-    </div>
+        </div>
 
     
-
     {% empty %}
 
-        <h2>Todavía no tenés ningún equipo</h2>
-        <a class="btn border" href="{% url 'Equipos:crearEquipo' %}"> Creá tu Equipo </a>
+        
+            <div class="contenedor">
+            
+                <h2>Todavía no tenés ningún equipo</h2>
+
+            </div>
+
+            <div class="contenedor">
+
+                <button id="botonDeRedireccionACreacionDeEquipos" class="btn-primary"> Creá tu primer Equipo </button>
+
+            </div> 
+
+        
+            <script type="module" src="{% static 'js/listadoDeEquipos.js' %}"></script>
 
     {% endfor %}
 
+
 </div>
+
 
 {% endblock %}

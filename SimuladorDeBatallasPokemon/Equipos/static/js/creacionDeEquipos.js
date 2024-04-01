@@ -1,113 +1,19 @@
-import {crearBoton, eliminarElementosHijos} from "./funcionesAuxiliares.js";
+import {
+    crearBoton,
+    eliminarElementosHijos,
+}
+from "../../../static/js/funcionesAuxiliares.js";
+
 import {
     buscarPokemonPorSubstring, 
-    buscarEspecie, 
+    buscarEspecie,
     buscarMovimientoPorSubstring, 
-    guardarEquipo
-} from "./solicitudesAJAX.js";
-
-
-class Equipo {
-    constructor(nombre='', integrantes=[]) {
-        this._nombre = nombre;
-        this._integrantes = integrantes;
-        this._tamano = 2;
-    }
-
-    set nombre(nuevoNombre) {
-        this._nombre = nuevoNombre;
-    }
-
-    get nombre() {
-        return this._nombre
-    }
-
-    get integrantes() {
-        return this._integrantes
-    }
-
-    get tamano() {
-        return this._tamano
-    }
-
-    
-    agregarPokemon(pokemon) {
-        this.integrantes.push(pokemon);
-    }
-
-
-    equipoCompleto() {
-        return this.integrantes.length === this.tamano;
-    }
-
-
-    equipoVacio() {
-        return this.integrantes.length === 0;
-    }
-
-
-    equipoEsValido() {
-        const todosTienenCuatroMovimientos = this.integrantes.every(pokemon => {
-            return pokemon.movimientos.length === 4;
-        });
-    
-        const todosTienenMovimientosValidos = this.integrantes.every(pokemon => {
-            return pokemon.movimientosSonValidos(pokemon.movimientos);
-        });
-        
-        const tamanoValido = this.equipoCompleto();
-    
-        console.log( tamanoValido + " // " + todosTienenCuatroMovimientos + " // " + todosTienenMovimientosValidos);
-    
-        return tamanoValido && todosTienenCuatroMovimientos && todosTienenMovimientosValidos 
-    }
-
-
-    toString() {
-        return `${this.nombre}( ${this.integrantes.length} )`;
-    }
+    guardarEquipo,
 }
+from "./solicitudesEquipos.js";
 
-
-class Pokemon {
-    constructor(nombre, movimientos=[]) {
-        this._nombre = nombre;
-        this._movimientos = movimientos;
-    }
-
-    agregarMovimiento(movimiento) {
-        if ( this._movimientos.length < 4 && movimiento) {
-            this._movimientos.push(movimiento);
-        }
-        else {
-            console.log("Solo podes elegir hasta 4 movimientos.")
-        }
-    }
-
-    agregarMovimientos(movimientos) {
-        movimientos.forEach((movimiento) => this.agregarMovimiento(movimiento));
-    }
-
-
-    movimientosSonValidos() {
-        let sonValidos = this.movimientos.every(movimiento => {
-            return movimiento !== '';
-        });
-        return sonValidos
-    }
-
-    get nombre() {
-        return this._nombre
-    }
-
-    get movimientos() {
-        return this._movimientos
-    }
-
-    toString() {
-        return `${this.nombre}( ${this.movimientos.length} )`;
-      }
-}
+import { Pokemon } from "./pokemon.js";
+import { Equipo } from "./equipo.js";
 
 
 function agregarPokemonAEquipo() {
@@ -130,8 +36,7 @@ function agregarPokemonAEquipo() {
 
 async function crearSeccionAgregarMovimientos(pokemon) {
     let contenedorSeleccionDeMovimientos = document.createElement("div");
-    contenedorSeleccionDeMovimientos.setAttribute("id", "contenedorSeleccionDeMovimientos")
-    contenedorSeleccionDeMovimientos.classList.add("contenedorConFondo1")
+    contenedorSeleccionDeMovimientos.classList.add("contenedorAnchoMediano", "fondo1");
 
     let nombrePokemon = document.createElement("h5");
     nombrePokemon.setAttribute("id", "nombreDePokemonParaBusquedaDeMovimiento");
@@ -147,7 +52,7 @@ async function crearSeccionAgregarMovimientos(pokemon) {
     
     let contenedorMovimientos = document.createElement("div");
     contenedorMovimientos.setAttribute("id", "contenedorMovimientos");
-    contenedorMovimientos.classList.add("contenedor");
+    contenedorMovimientos.classList.add("container");
 
     let listaDeMovimientos = document.createElement("ol");
     contenedorMovimientos.appendChild(listaDeMovimientos);
