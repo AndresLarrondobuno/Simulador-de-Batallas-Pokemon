@@ -1,5 +1,3 @@
-import { Orden, OrdenDeAtaque, OrdenDeCambioDePokemon } from "./orden.js";
-
 class Entrenador {
     constructor(rol, equipo) {
         this._rol = rol;
@@ -52,14 +50,17 @@ class Entrenador {
 
 
     toString() {
-        return this._nombre
+        return this._rol
     }
     
 
     darOrden() {
-        console.log("entrenador.darOrden()");
+        console.log(this._rol, ": entrenador.darOrden() ejecutado");
         if (this.orden) {
             this.orden.ejecutar();
+        }
+        else {
+            console.log(`el entrenador ${this.rol} no posee una orden asignada.`)
         }
     }
 

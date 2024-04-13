@@ -1,8 +1,13 @@
-import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
-
 class Orden {
     constructor(entrenador) {
         this._entrenador = entrenador;
+        this._prioridad = null;
+        this._mensajeDeEjecucion = null;
+    }
+
+
+    get mensajeDeEjecucion() {
+        return this._mensaje
     }
 
 
@@ -16,6 +21,11 @@ class Orden {
     }
 
 
+    set mensajeDeEjecucion(string) {
+        this._mensaje = string;
+    }
+
+
     ejecutar() {
         throw new Error('Método abstracto debe ser implementado por las subclases.');
     }
@@ -24,21 +34,14 @@ class Orden {
     mensaje() {
         throw new Error('Método abstracto debe ser implementado por las subclases.');
     }
-
-
-    prioridad() {
-        throw new Error('Método abstracto debe ser implementado por las subclases.');
-    }
 }
 
 
 class OrdenDeAtaque extends Orden {
     constructor(entrenador, informacionDeOrden) {
         super(entrenador);
-        console.log("informacionDeOrden, objeto OrdenDeAtaque", informacionDeOrden);
-        this._prioridad = 2;
+        this._prioridad = 1;
         this._indiceMovimiento = informacionDeOrden['indiceMovimiento'];
-
     }
 
 
@@ -50,58 +53,53 @@ class OrdenDeAtaque extends Orden {
     ejecutar() {
         //obtener pokemon atacado
         let batalla = this.entrenador.batalla;
+        let turnoActual = batalla.turnoActual;
         let entrenadorOponente = batalla.obtenerOponente(this.entrenador);
         let pokemonAtacante = this.entrenador.pokemonEnCombate;
-        console.log("entrenador: ", this.entrenador);
         let pokemonAtacado = entrenadorOponente.pokemonEnCombate;
-        console.log("entrenador oponente: ", entrenadorOponente);
         let movimiento = pokemonAtacante.movimientos[this.indiceMovimiento];
-        console.log("movimiento usado: ", movimiento);
-
         let danoCausado = pokemonAtacante.atacar(pokemonAtacado, movimiento);
 
-        let mensaje = this.mensaje(pokemonAtacante, pokemonAtacado, movimiento, danoCausado);
+        this.mensajeDeEjecucion = this.mensaje(turnoActual, pokemonAtacante, pokemonAtacado, movimiento, danoCausado);
 
-        let mensajeJSON = JSON.stringify({
-            'mensaje': mensaje, //contenido
-            'type': 'relatoDeAccionDeBatalla', //handler
-        });
-
-        websocket.send(mensajeJSON);
     }
 
 
-    mensaje(pokemonAtacante, pokemonAtacado, movimiento, danoCausado) {
-        return `${pokemonAtacante} ataco a ${pokemonAtacado} con ${movimiento} quitandole ${danoCausado} puntos de vida.`
-    }
-
-
-    prioridad() {
-        //funcion para usar como clave de ordenamiento cuando decida el orden de las ordenes a ejecutar
-        return
+    mensaje(turnoActual, pokemonAtacante, pokemonAtacado, movimiento, danoCausado) {
+        return `TURNO ${turnoActual}: ${pokemonAtacante} ataco a ${pokemonAtacado} con ${movimiento} quitandole ${danoCausado} puntos de vida.`
     }
 }
 
 
 class OrdenDeCambioDePokemon extends Orden {
-    constructor(informacionDeOrden) {
+    constructor(entrenador, informacionDeOrden) {
         super(entrenador);
-        this._prioridad = 1;
+        this._prioridad = 2;
+        this._indicePokemonEntrante = informacionDeOrden['indicePokemonParaCambio'];
+
+    }
+
+
+    get indicePokemonEntrante() {
+        return this._indicePokemonEntrante
     }
 
 
     ejecutar() {
-        return
+        //necesito que el cambio de pokemon se registre como un evento, y que el handler actualice la imagen en el front.
+        let batalla = this.entrenador.batalla;
+        let turnoActual = batalla.turnoActual;
+        let pokemonSaliente = this.entrenador.pokemonEnCombate;
+        let pokemonEntrante = this.entrenador.equipo.pokemons[this.indicePokemonEntrante];
+        pokemonSaliente.enCombate = false;
+        pokemonEntrante.enCombate = true;
+
+        this.mensajeDeEjecucion = this.mensaje(turnoActual, pokemonEntrante, pokemonSaliente);
     }
 
 
-    mensaje() {
-        return
-    }
-
-
-    prioridad() {
-        return
+    mensaje(turnoActual, pokemonEntrante, pokemonSaliente) {
+        return `TURNO ${turnoActual}: ${this.entrenador} retiro a ${pokemonSaliente} y eligio a ${pokemonEntrante} para continuar la batalla.`
     }
 }
 

@@ -1,5 +1,5 @@
 class AdministradorDeChat {
-    static enviarMensajeDeUsuario(mensaje) {
+    static imprimirMensajeDeUsuarioEnChat(mensaje) {
         let contenedorMensajes = document.getElementById("contenedorMensajes");
         let elementoMensaje = document.createElement("p");
         elementoMensaje.textContent = mensaje;
@@ -7,7 +7,7 @@ class AdministradorDeChat {
     }
 
 
-    static relatarAccionDeBatalla(mensaje) {
+    static imprimirRelatoDeAccionDeBatalla(mensaje) {
         let contenedorMensajes = document.getElementById("contenedorMensajes");
         let elementoMensaje = document.createElement("p");
         elementoMensaje.classList.add("relatoDeAccionEnBatalla");

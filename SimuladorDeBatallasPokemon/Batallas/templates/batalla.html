@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
-
 {% load static %}
+{% load simulador_extras %}
 
 {% block contenido_principal %}
 
@@ -14,9 +14,9 @@
 
         {% for pokemon in modelo_equipo_solicitante.pokemon_set.all %}
 
-            <div>
+            <div id="{{ 'contenedorPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}">
 
-                <h5>{{ pokemon.obtenerNombre }}</h5>
+                <h5>{{ pokemon.obtener_nombre }}</h5>
                 <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
                 
             </div>
@@ -30,9 +30,9 @@
 
         {% for pokemon in modelo_equipo_destinatario.pokemon_set.all %}
 
-            <div>
+            <div id="{{ 'contenedorPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}">
 
-                <h5>{{ pokemon.obtenerNombre }}</h5>
+                <h5>{{ pokemon.obtener_nombre }}</h5>
                 <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
 
             </div>
@@ -72,8 +72,7 @@
     <div>
 
         <br>
-
-        <form class="enviarMensaje" id="formularioParaEnviarMensajeAServidor">
+        <form class="enviarMensaje" data-username="{{ nombre_usuario_actual }}" id="formularioParaEnviarMensajeAServidor">
 
             <input type="text" name="contenido">
 

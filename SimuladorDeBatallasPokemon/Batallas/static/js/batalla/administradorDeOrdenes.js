@@ -8,18 +8,19 @@ class AdministradorDeOrdenes {
         if (informacionDeOrden['indicePokemonParaCambio']) {
             var orden = new OrdenDeCambioDePokemon(entrenador, informacionDeOrden);
         }
-        console.log("objeto orden: ", orden);
+        console.log("objeto orden: ", orden, "tipo de orden: ", typeof(orden));
         return orden
     }
 
 
     static asignarOrden(entrenador, informacionDeOrden) {
-        let ordenEntrenador = AdministradorDeOrdenes.obtenerOrden(entrenador, informacionDeOrden);
-        entrenador.orden = ordenEntrenador;
+        let orden = AdministradorDeOrdenes.obtenerOrden(entrenador, informacionDeOrden);
+        entrenador.orden = orden;
     }
 
 
     static asignarOrdenes(batalla, datosBatalla) {
+        console.log("metodo asignarOrdenes ejecutado.");
         //sincroniza las ordenes para ambos clientes porque se llama en ambos
         let entrenadorSolicitante = batalla.entrenadores["entrenadorSolicitante"];
         let entrenadorDestinatario = batalla.entrenadores["entrenadorDestinatario"];
@@ -29,10 +30,10 @@ class AdministradorDeOrdenes {
 
         AdministradorDeOrdenes.asignarOrden(entrenadorSolicitante, informacionDeOrdenSolicitante);
         AdministradorDeOrdenes.asignarOrden(entrenadorDestinatario, informacionDeOrdenDestinatario);
-
-        console.log("entrenadores: ", entrenadorSolicitante, entrenadorDestinatario);
-        console.log("infoOrdenes: ", informacionDeOrdenSolicitante, informacionDeOrdenDestinatario);
     }
+
+
+
 
 }
 

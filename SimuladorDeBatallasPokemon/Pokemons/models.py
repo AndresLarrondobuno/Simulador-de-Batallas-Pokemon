@@ -107,5 +107,5 @@ class Pokemon(models.Model):
     movimientos = models.ManyToManyField(Movimiento)
 
 
-    def obtenerNombre(self):
+    def obtener_nombre(self):
         return self.nombre.title()

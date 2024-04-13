@@ -1,46 +1,54 @@
 import { websocket } from "./iniciarConexionWs.js";
 import { AdministradorDeChat } from "../batalla/administradorDeChat.js"
+import { AdministradorDeOrdenes } from "../batalla/administradorDeOrdenes.js";
+import { batalla } from "../batalla/main.js";
 
 //(4) OUTPUT
 function manejarEventoMessage(evento) {
     let datos = JSON.parse(evento.data);
-    console.log("event.data: ", evento.data)
-    console.log("Datos: ", datos);
 
     if (datos.type === 'mensajeDeUsuario') {
         let mensaje = datos.message;
-        AdministradorDeChat.enviarMensajeDeUsuario(mensaje);
+        AdministradorDeChat.imprimirMensajeDeUsuarioEnChat(mensaje);
     }
     if (datos.type === 'relatoDeAccionDeBatalla') {
         let mensaje = datos.message;
-        AdministradorDeChat.relatarAccionDeBatalla(mensaje);
+        AdministradorDeChat.imprimirRelatoDeAccionDeBatalla(mensaje);
+    }
+    if (datos.type === 'actualizacionDeEstadoDeBatalla') {
+        let mensaje = datos.message;
+        console.log("mensaje: ", mensaje);
+        AdministradorDeOrdenes.asignarOrdenes(batalla, mensaje);
+        window.dispatchEvent(turnoListoParaEjecutarse);
     }
 }
 
 
 //(1) INPUT
-function enviarMensajeWebsocketAServidor(event) {
+function enviarMensajeDeUsuarioViaWebsocket(event) {
     event.preventDefault();
-    console.log(event.target);
 
     let mensaje = event.target.contenido.value;
+    let username = event.target.dataset.username;
+
     let mensajeJSON = JSON.stringify({
-        'mensaje': mensaje,
+        'message': mensaje,
         'type': 'mensajeDeUsuario',
+        'username': username,
     });
 
-    websocket.send(mensajeJSON);
+    websocket.send(mensajeJSON);//cambiar por metodo auxiliar enviarMensajeAConsumidor
 
-    console.log("json: ", mensajeJSON);
     formularioParaEnviarMensajeAServidor.reset();
 }
-
 
 
 let formularioParaEnviarMensajeAServidor = document.getElementById("formularioParaEnviarMensajeAServidor");
 
 //(1) INPUT
-formularioParaEnviarMensajeAServidor.addEventListener('submit', enviarMensajeWebsocketAServidor);
+formularioParaEnviarMensajeAServidor.addEventListener('submit', enviarMensajeDeUsuarioViaWebsocket);
 
 //(4) OUTPUT
 websocket.onmessage = manejarEventoMessage;
+
+const turnoListoParaEjecutarse = new Event('turnoListoParaEjecutarse');

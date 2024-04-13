@@ -1,6 +1,5 @@
-import { Batalla } from "./batalla.js";
-import { ControladorDeEventos } from "./controladorDeEventos.js"
-import { batalla, rolUsuario, entrenadorSolicitante, entrenadorDestinatario } from "./main.js";
+import { AdministradorDeEventos } from "./administradorDeEventos.js"
+import { batalla } from "./main.js";
 
 let datosEquipo = document.getElementById("contenedorBatalla").dataset.equipo;
 datosEquipo = JSON.parse(datosEquipo);
@@ -8,6 +7,8 @@ let datosMovimientosPokemonLider = datosEquipo[0]['movimientos'];
 
 let contenedorMovimientos = document.getElementById("contenedorMovimientos");
 let contenedorCambioDePokemon = document.getElementById("contenedorCambioDePokemon");
+
+
 
 let botonMovimientoUno = document.createElement("button");
 let botonMovimientoDos = document.createElement("button");
@@ -41,8 +42,7 @@ let botones = botonesMovimientos.concat([botonCambioDePokemon]);
 
 //listeners que comunican al servidor la accion elegida por los usuarios
 botones.forEach(boton => {
-    boton.addEventListener('click', ControladorDeEventos.guardarEleccionDeAccionDeBatalla);
+    boton.addEventListener('click', AdministradorDeEventos.guardarEleccionDeAccionDeBatalla);
 });
-
 
 window.addEventListener("turnoListoParaEjecutarse", batalla.ejecutarTurno.bind(batalla));

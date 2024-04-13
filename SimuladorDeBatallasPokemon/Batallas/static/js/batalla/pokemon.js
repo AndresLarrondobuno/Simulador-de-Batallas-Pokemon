@@ -5,13 +5,16 @@ class Pokemon {
         this._nombre = datosPokemon['nombre'];
         this._tipoPrincipal = datosPokemon['tipoPrincipal'];
         this._tipoSecundario = datosPokemon['tipoPrincipal'];
+        this._movimientos = this.obtenerMovimientos(datosPokemon['movimientos']);
+
+
+        this._vidaTotal = datosPokemon['vida'];
         this._vida = datosPokemon['vida'];
         this._ataque = datosPokemon['ataque'];
         this._defensa = datosPokemon['defensa'];
         this._ataqueEspecial = datosPokemon['ataqueEspecial'];
         this._defensaEspecial = datosPokemon['defensaEspecial'];
         this._velocidad = datosPokemon['velocidad'];
-        this._movimientos = this.obtenerMovimientos(datosPokemon['movimientos']);
         this._enCombate = false;
     }
 
@@ -66,11 +69,9 @@ class Pokemon {
     }
 
     atacar(pokemonAtacado, movimiento) {
-        console.log("vida antes del ataque: ", pokemonAtacado.vida);
         let danoCausado = Math.floor(movimiento.potencia / 50) * Math.floor(this.ataque / 10)
         let vidaRestante = pokemonAtacado.vida - danoCausado;
         pokemonAtacado.vida = vidaRestante;
-        console.log(`vida restante: ${pokemonAtacado.vida} / objetivo: ${pokemonAtacado.nombre} / movimiento: ${movimiento.nombre}`);
         return danoCausado
     }
 

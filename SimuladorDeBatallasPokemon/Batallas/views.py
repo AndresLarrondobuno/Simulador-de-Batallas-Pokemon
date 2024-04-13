@@ -9,6 +9,22 @@ import json
 
 batallas = {}
 
+'''
+batallas = {
+    40 : { 1: 
+            "datos_orden_usuario_solicitante": None,
+            "datos_orden_usuario_destinatario": None,
+        }
+    }
+}
+
+
+{
+    1:    {"datos_orden_usuario_solicitante": None, "datos_orden_usuario_destinatario": None}
+    2:    {"datos_orden_usuario_solicitante": None, "datos_orden_usuario_destinatario": None}
+}
+'''
+
 class SerializadorDeModelos():
     def serializar_equipo(modelo_equipo: models.Model) -> dict:
         modelos_pokemons = modelo_equipo.pokemon_set.all()
@@ -33,35 +49,38 @@ class BatallasController():
     def guardar_eleccion_de_accion_de_batalla(self, request):
         datos = json.loads(request.body)
         id_batalla = datos['idBatalla']
+        turno_actual = datos['turnoActual']
         rol_usuario = datos['rolUsuario']
         informacion_de_orden = datos['informacionDeOrden']
-        
-        default = {
-            "datos_orden_usuario_solicitante": None,
-            "datos_orden_usuario_destinatario": None,
-        }
-        
+
         if not batallas.get(id_batalla):
-            batallas[id_batalla] = default   
+            batallas[id_batalla] = {}
         
-        datos_orden_usuario_solicitante_asignada = batallas[id_batalla]['datos_orden_usuario_solicitante']
-        datos_orden_usuario_destinatario_asignada = batallas[id_batalla]['datos_orden_usuario_destinatario']
+        if not batallas[id_batalla].get(turno_actual):
+            batallas[id_batalla][turno_actual] = {}
         
-        #si la request viene del usuario solicitante
-        if rol_usuario == 'solicitante' and (not datos_orden_usuario_solicitante_asignada):
-            batallas[id_batalla]['datos_orden_usuario_solicitante'] = informacion_de_orden
-        elif rol_usuario == 'destinatario' and (not datos_orden_usuario_destinatario_asignada):
-            batallas[id_batalla]['datos_orden_usuario_destinatario'] = informacion_de_orden
+        solicitante_eligio_accion = batallas[id_batalla].get(turno_actual, {}).get('datos_orden_usuario_solicitante')
+        destinatario_eligio_accion = batallas[id_batalla].get(turno_actual, {}).get('datos_orden_usuario_destinatario')
+        
+        print('solicitante_eligio_accion: ', solicitante_eligio_accion)
+        print('destinatario_eligio_accion: ', destinatario_eligio_accion)
+        
+        #si la request viene del usuario solicitante/destinatario
+        if rol_usuario == 'solicitante' and (not solicitante_eligio_accion):
+            batallas[id_batalla][turno_actual]['datos_orden_usuario_solicitante'] = informacion_de_orden
+        elif rol_usuario == 'destinatario' and (not destinatario_eligio_accion):
+            batallas[id_batalla][turno_actual]['datos_orden_usuario_destinatario'] = informacion_de_orden
         else:
             print('Este usuario ya eligio su accion.')
+            print('(view) solicitante_eligio_accion: ', solicitante_eligio_accion)
+            print('(view) destinatario_eligio_accion: ', destinatario_eligio_accion)
 
-        datos_orden_usuario_solicitante_asignada = batallas[id_batalla]['datos_orden_usuario_solicitante']
-        datos_orden_usuario_destinatario_asignada = batallas[id_batalla]['datos_orden_usuario_destinatario']
+        print("batalla actual: ", batallas[id_batalla])
+        print("turno actual: ", batallas[id_batalla][turno_actual])
+        print()
         
-        print("batallas: ", batallas)
-        
-        #comunicar el estado de la batalla (el estado de la eleccion de cada usuario)
-        return JsonResponse(batallas[id_batalla], safe=False)
+        #comunicar el estado de la batalla (de la eleccion de cada usuario en determinado turno)
+        return JsonResponse(batallas[id_batalla][turno_actual], safe=False)
 
 
     def batalla(self, request, id):
@@ -90,6 +109,7 @@ class BatallasController():
             'id':id,
             'usuario_solicitante': perfil_usuario_solicitante,
             'usuario_destinatario': perfil_usuario_destinatario,
+            'nombre_usuario_actual': usuario_actual.username,
             'modelo_equipo_solicitante': modelo_equipo_solicitante,
             'modelo_equipo_destinatario': modelo_equipo_destinatario,
             'datos_equipo_usuario_actual': datos_equipo_usuario_actual,
@@ -191,7 +211,7 @@ class BatallasController():
             id_usuario = usuario.id
             batallasPendientes = Batalla.objects.filter(usuario_solicitante_id=id_usuario, activa=True)
 
-            contexto = {"batallasPendientes":batallasPendientes}
+            contexto = {"batallasPendientes": batallasPendientes}
 
             perfilUsuario = PerfilUsuario.objects.get(usuario=usuario)
             contexto['usuario'] = perfilUsuario

@@ -1,8 +1,8 @@
-import { csrftoken } from "../../../static/js/funcionesAuxiliares.js";
-import { AdministradorDeOrdenes } from "./administradorDeOrdenes.js";
+import { csrftoken, enviarMensajeAConsumidor } from "../../../static/js/funcionesAuxiliares.js";
+import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 import { batalla } from "./main.js";
 
-class ControladorDeEventos {
+class AdministradorDeEventos {
 
     static async guardarEleccionDeAccionDeBatalla(event) {
         event.preventDefault();
@@ -13,14 +13,17 @@ class ControladorDeEventos {
         let idBoton = event.target.id;
 
         if (idBoton.includes('botonMovimiento')) {
-            var informacionDeOrden = ControladorDeEventos.obtenerInformacionDeMovimiento(event);
+            var informacionDeOrden = AdministradorDeEventos.obtenerInformacionDeMovimiento(event);
         }
         else {
-            var informacionDeOrden = ControladorDeEventos.obtenerInformacionDeCambioDePokemon(event);
+            var informacionDeOrden = AdministradorDeEventos.obtenerInformacionDeCambioDePokemon(event);
+            console.log("guardarEleccionDeAccionDeBatalla() -> cambio de pokemon");
+            console.log("informacionDeOrden: ", informacionDeOrden);
         }
 
         let datos = {
             "idBatalla": idBatalla,
+            "turnoActual": batalla.turnoActual,
             "rolUsuario": rolUsuario,
             "informacionDeOrden": informacionDeOrden,
         }
@@ -38,35 +41,36 @@ class ControladorDeEventos {
             body: jsonDatos,
         });
 
-
         if (respuesta.ok) {
             console.log("Accion de usuario almacenada correctamente.");
 
             const respuestaJson = await respuesta.json();
 
-            let entrenadorSolicitanteEligioAccion = respuestaJson['datos_orden_usuario_solicitante']
-            let entrenadorDestinatarioEligioAccion = respuestaJson['datos_orden_usuario_destinatario']
+            let entrenadorSolicitanteEligioAccion = respuestaJson['datos_orden_usuario_solicitante'];
+            let entrenadorDestinatarioEligioAccion = respuestaJson['datos_orden_usuario_destinatario'];
+
 
             if (entrenadorSolicitanteEligioAccion && entrenadorDestinatarioEligioAccion) {
                 console.log("Ambos entrenadores eligieron accion.");
 
-                AdministradorDeOrdenes.asignarOrdenes(batalla, respuestaJson);
-                window.dispatchEvent(turnoListoParaEjecutarse);
+                let jsonActualizacionDeEstadoDeBatalla = {
+                    'type': 'actualizacionDeEstadoDeBatalla',
+                    'message': respuestaJson, 
+                }
+
+                try {
+                    await enviarMensajeAConsumidor(websocket, jsonActualizacionDeEstadoDeBatalla); //espero a que las ordenes se asignen
+                }
+                catch(error) {
+                    console.error("Error al enviar el mensaje WebSocket:", error);
+                }
+
             }
         }
         else {
-            console.log("entrenadorSolicitanteEligioAccion", entrenadorSolicitanteEligioAccion);
-            console.log("entrenadorDestinatarioEligioAccion", entrenadorDestinatarioEligioAccion);
+            console.log("entrenadorSolicitanteEligioAccion: ", entrenadorSolicitanteEligioAccion);
+            console.log("entrenadorDestinatarioEligioAccion: ", entrenadorDestinatarioEligioAccion);
         }
-
-    }
-
-
-    static actualizarEstadoDeBatalla(batalla) {
-        let entrenadorSolicitante = batalla.entrenadores['entrenadorSolicitante'];
-        let entrenadorDestinatario = batalla.entrenadores['entrenadorDestinatario'];
-
-        
     }
 
 
@@ -90,9 +94,10 @@ class ControladorDeEventos {
             'indiceMovimiento': null,
             'indicePokemonParaCambio': 1, //valor para testeo
         };
-    return informacionDeOrden
-}
+        return informacionDeOrden
+    }
 }
 
-const turnoListoParaEjecutarse = new Event('turnoListoParaEjecutarse');
-export { ControladorDeEventos };
+
+
+export { AdministradorDeEventos };

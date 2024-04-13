@@ -9,4 +9,5 @@ function iniciarConexionWebsocket() {
 }
 
 let websocket = iniciarConexionWebsocket();
+
 export { websocket };
