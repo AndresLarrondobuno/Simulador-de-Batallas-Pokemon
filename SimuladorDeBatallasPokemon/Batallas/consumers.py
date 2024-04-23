@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.core.cache import cache
+#from django.core.cache import cache
 
 
 class BatallaConsumer(AsyncWebsocketConsumer):
@@ -44,20 +44,11 @@ class BatallaConsumer(AsyncWebsocketConsumer):
             'message': mensaje,
         }
 
-        if tipo == 'relatoDeAccionDeBatalla':
-            await self.send(json.dumps(contexto))
-        elif tipo == 'actualizacionDeBotonesDeMovimientos':
-            await self.send(json.dumps(contexto))
-        elif tipo == 'holamundo':
-            await self.send(json.dumps(contexto))
-        elif tipo == 'mensajeDeUsuario':
+        if tipo == 'mensajeDeUsuario':#
             username = datos_deserializados['username']
             contexto['username'] = username
-            await self.channel_layer.group_send(self.room_group_name, contexto)
-        elif tipo == 'actualizacionDeEstadoDeBatalla':
-            await self.channel_layer.group_send(self.room_group_name, contexto)
-        elif tipo == 'actualizacionDeImagenDePokemonEnCombate':
-            await self.channel_layer.group_send(self.room_group_name, contexto)
+            
+        await self.channel_layer.group_send(self.room_group_name, contexto)
 
 
     #(3) maneja mensajes con type "mensajeDeUsuario"
@@ -99,6 +90,22 @@ class BatallaConsumer(AsyncWebsocketConsumer):
         })
 
         await self.send(text_data=json_contexto)
+    
+    
+    async def actualizacionDeBotonesDeMovimientos(self, contexto):
+        rol = contexto['message']['rol']
+        id = contexto['message']['id']
+        llave = f'username_{rol}_batalla_{id}'
+        print(f"metodo actualizacionDeBotonesDeMovimientos ejecutado, consumidor asociado a: {self.scope['user']}")
+
+        json_contexto = json.dumps({
+            'type':'actualizacionDeBotonesDeMovimientos',
+            'message': rol,
+        })
+        
+        '''if cache.get(llave) == 'andresporteus':
+            print(cache.get(llave), self.scope['user'])'''
+        await self.send(text_data=json_contexto)
 
     
     async def actualizacionDeImagenDePokemonEnCombate(self, contexto):
@@ -112,21 +119,4 @@ class BatallaConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json_contexto)
 
     
-    async def actualizacionDeBotonesDeMovimientos(self, contexto):
-        rol = contexto['message']['rol']
-        id = contexto['message']['id']
-        llave = f'username_{rol}_batalla_{id}'
-        print(f"metodo actualizacionDeBotonesDeMovimientos ejecutado, consumidor asociado a: {self.scope['user']}")
-
-        json_contexto = json.dumps({
-            'type':'actualizacionDeBotonesDeMovimientos',
-            'message': rol,
-        })
-        
-        if cache.get(llave) == 'andresporteus':
-            print(cache.get(llave), self.scope['user'])
-        await self.send(text_data=json_contexto)
     
-    
-    async def holamundo(self, contexto):
-        await self.send(text_data=contexto)

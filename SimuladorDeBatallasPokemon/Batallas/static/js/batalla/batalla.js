@@ -1,5 +1,7 @@
 import { enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
 import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
+import { AdministradorDeInterfazDeChat } from "./administradorDeInterfazChat.js";
+import { AdministradorDeInterfazDeBatalla } from "./administradorDeInterfazDeBatalla.js";
 
 class Batalla {
     constructor(entrenadorSolicitante, entrenadorDestinatario) {
@@ -78,7 +80,7 @@ class Batalla {
     }
 
 
-    ejecutarTurno() {
+    async ejecutarTurno() {
         console.log("ambasOrdenesSonDeAtaque() -> ", this.ambasOrdenesSonDeAtaque());
 
         if (this.ambasOrdenesSonDeAtaque()) {
@@ -88,39 +90,20 @@ class Batalla {
             var entrenadoresOrdenadosParaEjecucion = this.obtenerOrdenDeEjecucionPorPrioridad();
         }
 
-        entrenadoresOrdenadosParaEjecucion.forEach(entrenador => {
+        for (const entrenador of entrenadoresOrdenadosParaEjecucion) {
             entrenador.darOrden();
-
-            var mensajeOrden = entrenador.orden.mensajeDeEjecucion;
-
-            let relatoDeAccion = {
-                'message': mensajeOrden,
-                'type': 'relatoDeAccionDeBatalla',
-            };
-
-            enviarMensajeAConsumidor(websocket, relatoDeAccion, mensajeEnviadoAConsumidorConExito);
-
+    
+            AdministradorDeInterfazDeChat.imprimirRelatoDeAccionDeBatalla(entrenador.orden.mensajeDeEjecucion);
+    
             if (entrenador.orden.constructor.name === 'OrdenDeCambioDePokemon') {
+                AdministradorDeInterfazDeBatalla.actualizarImagenDePokemonEnCombate(entrenador);
+                let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
 
-                let actualizacionDeImagen = {
-                    'message': entrenador.rol,
-                    'type': 'actualizacionDeImagenDePokemonEnCombate',
-                };
-
-                enviarMensajeAConsumidor(websocket, actualizacionDeImagen, mensajeEnviadoAConsumidorConExito);
-
-                let actualizacionDeBotonesDeMovimientos = {
-                    'message': {
-                        'rol': entrenador.rol,
-                        'id': this.id
-                    },
-                    'type': 'actualizacionDeBotonesDeMovimientos',
-                };
-
-                enviarMensajeAConsumidor(websocket, actualizacionDeBotonesDeMovimientos, mensajeEnviadoAConsumidorConExito);
+                if (entrenador.rol === rolUsuario) {
+                    AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
+                }
             }
-
-        });
+        }
 
         this.siguienteTurno();
     }

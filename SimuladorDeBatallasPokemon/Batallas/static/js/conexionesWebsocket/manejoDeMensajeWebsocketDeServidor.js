@@ -1,6 +1,6 @@
 import { batalla } from "../batalla/main.js";
 import { websocket } from "./iniciarConexionWs.js";
-import { AdministradorDeChat } from "../batalla/administradorDeChat.js"
+import { AdministradorDeInterfazDeChat } from "../batalla/administradorDeInterfazChat.js"
 import { AdministradorDeOrdenes } from "../batalla/administradorDeOrdenes.js";
 import { AdministradorDeInterfazDeBatalla } from "../batalla/administradorDeInterfazDeBatalla.js";
 
@@ -10,17 +10,20 @@ function manejarEventoMessage(evento) {
 
     if (datos.type === 'mensajeDeUsuario') {
         let mensaje = datos.message;
-        AdministradorDeChat.imprimirMensajeDeUsuarioEnChat(mensaje);
+        AdministradorDeInterfazDeChat.imprimirMensajeDeUsuario(mensaje);
     }
     if (datos.type === 'relatoDeAccionDeBatalla') {
         let mensaje = datos.message;
-        AdministradorDeChat.imprimirRelatoDeAccionDeBatalla(mensaje);
+        AdministradorDeInterfazDeChat.imprimirRelatoDeAccionDeBatalla(mensaje);
     }
     if (datos.type === 'actualizacionDeEstadoDeBatalla') {
         let datosBatalla = datos.message;
         AdministradorDeOrdenes.asignarOrdenes(batalla, datosBatalla);
-        window.dispatchEvent(turnoListoParaEjecutarse);
+        batalla.ejecutarTurno();
+
     }
+
+
     if (datos.type === 'actualizacionDeImagenDePokemonEnCombate') {
         let rol = datos.message;
         let entrenador = batalla.obtenerEntrenadorPorRol(rol);
@@ -32,9 +35,7 @@ function manejarEventoMessage(evento) {
         console.log("(manejarEventoMessage, tipo 'actualizacionDeBotonesDeMovimientos') entrenador: ", entrenador);
         AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
     }
-    if (datos.type === 'holamundo') {
-        console.log(datos.message);
-    }
+
 }
 
 
@@ -64,5 +65,3 @@ formularioParaEnviarMensajeAServidor.addEventListener('submit', enviarMensajeDeU
 
 //(4) OUTPUT
 websocket.onmessage = manejarEventoMessage; //handler para evento websocket 'message'
-
-const turnoListoParaEjecutarse = new Event('turnoListoParaEjecutarse');

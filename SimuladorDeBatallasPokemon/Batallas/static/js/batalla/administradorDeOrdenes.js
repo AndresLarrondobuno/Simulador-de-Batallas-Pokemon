@@ -8,7 +8,6 @@ class AdministradorDeOrdenes {
         if (informacionDeOrden['indicePokemonParaCambio']) {
             var orden = new OrdenDeCambioDePokemon(entrenador, informacionDeOrden);
         }
-        console.log("objeto orden: ", orden, "tipo de orden: ", typeof(orden));
         return orden
     }
 

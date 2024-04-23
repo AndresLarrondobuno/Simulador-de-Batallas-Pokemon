@@ -2,7 +2,7 @@ import { csrftoken, enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito 
 import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 import { batalla } from "./main.js";
 
-class AdministradorDeEventos {
+class AdministradorDeEventosDOM {
 
     static async guardarEleccionDeAccionDeBatalla(event) {
         event.preventDefault();
@@ -13,10 +13,10 @@ class AdministradorDeEventos {
         let idBoton = event.target.id;
 
         if (idBoton.includes('botonMovimiento')) {
-            var informacionDeOrden = AdministradorDeEventos.obtenerInformacionDeMovimiento(event);
+            var informacionDeOrden = AdministradorDeEventosDOM.obtenerInformacionDeMovimiento(event);
         }
         else {
-            var informacionDeOrden = AdministradorDeEventos.obtenerInformacionDeCambioDePokemon(event);
+            var informacionDeOrden = AdministradorDeEventosDOM.obtenerInformacionDeCambioDePokemon(event);
 
         }
 
@@ -48,22 +48,13 @@ class AdministradorDeEventos {
             let entrenadorSolicitanteEligioAccion = respuestaJson['datos_orden_usuario_solicitante'];
             let entrenadorDestinatarioEligioAccion = respuestaJson['datos_orden_usuario_destinatario'];
 
-
             if (entrenadorSolicitanteEligioAccion && entrenadorDestinatarioEligioAccion) {
                 console.log("Ambos entrenadores eligieron accion.");
-
-                let jsonActualizacionDeEstadoDeBatalla = {
-                    'type': 'actualizacionDeEstadoDeBatalla',
-                    'message': respuestaJson, 
+                let datosElecciones = {
+                    "message": respuestaJson,
+                    "type": "actualizacionDeEstadoDeBatalla",
                 }
-
-                try {
-                    await enviarMensajeAConsumidor(websocket, jsonActualizacionDeEstadoDeBatalla, mensajeEnviadoAConsumidorConExito); //espero a que las ordenes se asignen
-                }
-                catch(error) {
-                    console.error("Error al enviar el mensaje WebSocket:", error);
-                }
-
+                await enviarMensajeAConsumidor(websocket, datosElecciones, mensajeEnviadoAConsumidorConExito);
             }
         }
         else {
@@ -101,6 +92,4 @@ class AdministradorDeEventos {
     }
 }
 
-
-
-export { AdministradorDeEventos };
+export { AdministradorDeEventosDOM };

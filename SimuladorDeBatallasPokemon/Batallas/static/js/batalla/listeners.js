@@ -1,5 +1,7 @@
-import { AdministradorDeEventos } from "./administradorDeEventos.js"
+import { AdministradorDeEventosDOM } from "./administradorDeEventos.js";
+import { enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
 import { batalla } from "./main.js";
+import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 
 let datosEquipo = document.getElementById("contenedorBatalla").dataset.equipo;
 datosEquipo = JSON.parse(datosEquipo);
@@ -53,7 +55,5 @@ let listeners = botonesMovimientos.concat([...imagenesPokemonsParaCambio]);
 
 //listeners que comunican al servidor la accion elegida por los usuarios
 listeners.forEach(elemento => {
-    elemento.addEventListener('click', AdministradorDeEventos.guardarEleccionDeAccionDeBatalla);
+    elemento.addEventListener('click', AdministradorDeEventosDOM.guardarEleccionDeAccionDeBatalla);
 });
-
-window.addEventListener("turnoListoParaEjecutarse", batalla.ejecutarTurno.bind(batalla));

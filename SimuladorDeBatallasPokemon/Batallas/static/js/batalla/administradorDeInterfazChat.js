@@ -1,5 +1,5 @@
-class AdministradorDeChat {
-    static imprimirMensajeDeUsuarioEnChat(mensaje) {
+class AdministradorDeInterfazDeChat {
+    static imprimirMensajeDeUsuario(mensaje) {
         let contenedorMensajes = document.getElementById("contenedorMensajes");
         let elementoMensaje = document.createElement("p");
         elementoMensaje.textContent = mensaje;
@@ -16,4 +16,4 @@ class AdministradorDeChat {
     }
 }
 
-export { AdministradorDeChat };
+export { AdministradorDeInterfazDeChat };
