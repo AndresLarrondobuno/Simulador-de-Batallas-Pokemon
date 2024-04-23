@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import models
 from django.forms.models import model_to_dict
-from django.core.cache import cache
 import json
 
 batallas = {}
@@ -85,12 +84,10 @@ class BatallasController():
             rol_usuario = 'solicitante'
             datos_equipo_usuario_actual = SerializadorDeModelos.serializar_equipo(modelo_equipo_solicitante)
             llave = f'username_{rol_usuario}_batalla_{id}'
-            cache.set(llave, usuario_actual.username)
         elif usuario_actual == usuario_destinatario:
             rol_usuario = 'destinatario'
             datos_equipo_usuario_actual = SerializadorDeModelos.serializar_equipo(modelo_equipo_destinatario)
             llave = f'username_{rol_usuario}_batalla_{id}'
-            cache.set(llave, usuario_actual.username)
         else:
             print("El usuario no pertenece a esta batalla.")
         
@@ -107,10 +104,7 @@ class BatallasController():
             'datos_equipo_usuario_destinatario': SerializadorDeModelos.serializar_equipo(modelo_equipo_destinatario),
             'rol_usuario': rol_usuario,
         }
-        
-        #cacheo       
-        #llave = f'rol_{usuario_actual.username}_batalla_{id}'
-        #cache.set(llave, rol_usuario)
+
 
         return render(request, 'batalla.html', contexto)
 
