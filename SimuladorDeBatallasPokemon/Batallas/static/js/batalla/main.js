@@ -15,12 +15,4 @@ let entrenadorDestinatario = new Entrenador('destinatario', equipoDestinatario);
 
 let batalla = new Batalla(entrenadorSolicitante, entrenadorDestinatario);
 
-//Emulo un turno
-
-//Se elige una orden, que proviene de un eventListener asociado al boton de movimiento / cambio de pokemon
-//el boton esta asociado a la instancia del entrenador correspondiente
-//con la informacion que trae el callback del listener creo un objeto Orden
-//el entrenador da la orden
-
-
 export { rolUsuario, entrenadorSolicitante, entrenadorDestinatario, batalla };

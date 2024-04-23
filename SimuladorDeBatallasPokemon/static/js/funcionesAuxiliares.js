@@ -38,18 +38,16 @@ function getCookie(name) {
 
 
 //envoltura para enviar el mensaje websocket de forma asincrona y luego esperar a su resolucion para continuar
-async function enviarMensajeAConsumidor(websocket, json) {
-    return new Promise((resolve, reject) => {
-        websocket.send(JSON.stringify(json));
-        // Esperamos a que el mensaje se haya enviado correctamente
-        websocket.addEventListener('message', () => {
-            resolve();
-        });
-        // Si hay un error al enviar el mensaje, rechazamos la promesa
-        websocket.addEventListener('error', (error) => {
-            reject(error);
-        });
-    });
+async function enviarMensajeAConsumidor(websocket, mensaje, mensajeEnviadoAConsumidorConExito) {
+    websocket.send(JSON.stringify(mensaje));
+    if (mensajeEnviadoAConsumidorConExito) {
+        mensajeEnviadoAConsumidorConExito(mensaje);
+    }
+};
+
+
+function mensajeEnviadoAConsumidorConExito() {
+    console.log("mensaje enviado al consumidor con exito. mensaje: ", mensaje);
 }
 
 
@@ -61,4 +59,5 @@ export {
     eliminarElementosHijos,
     agregarOpcionesASelectAPartirDeResultadosDeBusqueda,
     enviarMensajeAConsumidor,
+    mensajeEnviadoAConsumidorConExito,
 };

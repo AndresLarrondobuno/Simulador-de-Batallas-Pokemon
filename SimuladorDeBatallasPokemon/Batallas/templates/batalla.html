@@ -17,7 +17,7 @@
             <div id="{{ 'contenedorPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}">
 
                 <h5>{{ pokemon.obtener_nombre }}</h5>
-                <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
+                <img id="{{ 'imagenPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
                 
             </div>
 
@@ -33,7 +33,7 @@
             <div id="{{ 'contenedorPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}">
 
                 <h5>{{ pokemon.obtener_nombre }}</h5>
-                <img src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon }}">
+                <img id="{{ 'imagenPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
 
             </div>
 
@@ -41,17 +41,16 @@
 
     </div>
 
-    <div class="contenedorPokemon1">
-        <img src="data:image/png;base64,{{ modelo_equipo_solicitante.pokemon_set.first.especie.obtenerImagenFrente }}">
+    <div id="contenedorPokemonEnCombateSolicitante" class="contenedorPokemonEnCombateSolicitante">
+        <img id="imagenPokemonEnCombateSolicitante" src="data:image/png;base64,{{ modelo_equipo_solicitante.pokemon_set.first.especie.obtenerImagenFrente }}">
     </div>
 
-    <div class="contenedorPokemon2">
-        <img src="data:image/png;base64,{{ modelo_equipo_destinatario.pokemon_set.first.especie.obtenerImagenFrente }}">
+    <div class="contenedorPokemonEnCombateDestinatario">
+        <img id="imagenPokemonEnCombateDestinatario" src="data:image/png;base64,{{ modelo_equipo_destinatario.pokemon_set.first.especie.obtenerImagenFrente }}">
     </div>
 
 
     <div id="contenedorMovimientos" class="contenedorMovimientos" ></div>
-    <div id="contenedorCambioDePokemon" class="contenedorCambioDePokemon" ></div>
     
 
 </div>

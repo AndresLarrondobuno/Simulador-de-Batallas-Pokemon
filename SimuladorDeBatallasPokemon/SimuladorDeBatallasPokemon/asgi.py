@@ -16,12 +16,12 @@ from Batallas.routing import websocket_urlpatterns_batallas
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SimuladorDeBatallasPokemon.settings')
 
-# Obtener la aplicación Django para procesar solicitudes HTTP y WebSocket.
+# obtener la aplicación Django para procesar solicitudes HTTP y WebSocket.
 django_asgi_app = get_asgi_application()
 
-# Configuración del enrutador de canales para manejar solicitudes WebSocket.
+# configuracion del enrutador de canales para manejar solicitudes WebSocket.
 application = ProtocolTypeRouter({
-    "http": django_asgi_app,  # Ruta predeterminada para solicitudes HTTP normales.
+    "http": django_asgi_app,  # ruta predeterminada para solicitudes HTTP normales.
     "websocket": AllowedHostsOriginValidator(AuthMiddlewareStack(
         URLRouter(
             websocket_urlpatterns_batallas

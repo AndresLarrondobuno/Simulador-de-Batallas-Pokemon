@@ -1,4 +1,4 @@
-import { enviarMensajeAConsumidor } from "../../../static/js/funcionesAuxiliares.js";
+import { enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
 import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 
 class Batalla {
@@ -12,6 +12,11 @@ class Batalla {
         entrenadorDestinatario.batalla = this;
 
         this._turnoActual = 1;
+        this._id = document.getElementById("tituloBatalla").dataset.id;
+    }
+
+    get id() {
+        return this._id
     }
 
 
@@ -27,6 +32,19 @@ class Batalla {
 
     siguienteTurno() {
         this._turnoActual++;
+    }
+
+
+    obtenerEntrenadorPorRol(rol) {
+        if (rol === 'solicitante') {
+            return this._entrenadores["entrenadorSolicitante"]
+        }
+        if (rol === 'destinatario') {
+            return this._entrenadores["entrenadorDestinatario"]
+        }
+        else {
+            console.log(`rol invalido: ${rol}`);
+        }
     }
 
 
@@ -62,26 +80,46 @@ class Batalla {
 
     ejecutarTurno() {
         console.log("ambasOrdenesSonDeAtaque() -> ", this.ambasOrdenesSonDeAtaque());
-        if (this.ambasOrdenesSonDeAtaque()){
+
+        if (this.ambasOrdenesSonDeAtaque()) {
             var entrenadoresOrdenadosParaEjecucion = this.obtenerOrdenDeEjecucionPorVelocidad();
         }
         else {
             var entrenadoresOrdenadosParaEjecucion = this.obtenerOrdenDeEjecucionPorPrioridad();
         }
 
-        console.log("ejecutarTurno() ", entrenadoresOrdenadosParaEjecucion);
-
         entrenadoresOrdenadosParaEjecucion.forEach(entrenador => {
             entrenador.darOrden();
-            
+
             var mensajeOrden = entrenador.orden.mensajeDeEjecucion;
 
             let relatoDeAccion = {
-                'message': mensajeOrden, //contenido
-                'type': 'relatoDeAccionDeBatalla', //handler
+                'message': mensajeOrden,
+                'type': 'relatoDeAccionDeBatalla',
             };
 
-            enviarMensajeAConsumidor(websocket, relatoDeAccion);
+            enviarMensajeAConsumidor(websocket, relatoDeAccion, mensajeEnviadoAConsumidorConExito);
+
+            if (entrenador.orden.constructor.name === 'OrdenDeCambioDePokemon') {
+
+                let actualizacionDeImagen = {
+                    'message': entrenador.rol,
+                    'type': 'actualizacionDeImagenDePokemonEnCombate',
+                };
+
+                enviarMensajeAConsumidor(websocket, actualizacionDeImagen, mensajeEnviadoAConsumidorConExito);
+
+                let actualizacionDeBotonesDeMovimientos = {
+                    'message': {
+                        'rol': entrenador.rol,
+                        'id': this.id
+                    },
+                    'type': 'actualizacionDeBotonesDeMovimientos',
+                };
+
+                enviarMensajeAConsumidor(websocket, actualizacionDeBotonesDeMovimientos, mensajeEnviadoAConsumidorConExito);
+            }
+
         });
 
         this.siguienteTurno();

@@ -1,4 +1,4 @@
-import { csrftoken, enviarMensajeAConsumidor } from "../../../static/js/funcionesAuxiliares.js";
+import { csrftoken, enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
 import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 import { batalla } from "./main.js";
 
@@ -17,8 +17,7 @@ class AdministradorDeEventos {
         }
         else {
             var informacionDeOrden = AdministradorDeEventos.obtenerInformacionDeCambioDePokemon(event);
-            console.log("guardarEleccionDeAccionDeBatalla() -> cambio de pokemon");
-            console.log("informacionDeOrden: ", informacionDeOrden);
+
         }
 
         let datos = {
@@ -59,7 +58,7 @@ class AdministradorDeEventos {
                 }
 
                 try {
-                    await enviarMensajeAConsumidor(websocket, jsonActualizacionDeEstadoDeBatalla); //espero a que las ordenes se asignen
+                    await enviarMensajeAConsumidor(websocket, jsonActualizacionDeEstadoDeBatalla, mensajeEnviadoAConsumidorConExito); //espero a que las ordenes se asignen
                 }
                 catch(error) {
                     console.error("Error al enviar el mensaje WebSocket:", error);
@@ -89,11 +88,15 @@ class AdministradorDeEventos {
 
 
     static obtenerInformacionDeCambioDePokemon(event) {
-        let textoBoton = event.target.textContent;
+        let imagen = event.target;
+        let id = imagen.id;
+        let indiceEnEquipo = id[id.length - 1]; //accede al ultimo elemento, equivale a id[-1] en python
+
         let informacionDeOrden = {
             'indiceMovimiento': null,
-            'indicePokemonParaCambio': 1, //valor para testeo
+            'indicePokemonParaCambio': indiceEnEquipo,
         };
+
         return informacionDeOrden
     }
 }

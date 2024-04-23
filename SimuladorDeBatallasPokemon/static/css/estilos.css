@@ -112,7 +112,7 @@ body {
     border-radius: 15px;
 }
 
-.contenedorPokemon1 {
+.contenedorPokemonEnCombateSolicitante {
     position: fixed;
     padding: 1%;
     top: 400px; 
@@ -124,7 +124,7 @@ body {
     border-radius: 15px;
 }
 
-.contenedorPokemon2 {
+.contenedorPokemonEnCombateDestinatario {
     position: fixed;
     padding: 1%;
     top: 100px;

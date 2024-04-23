@@ -6,21 +6,32 @@ datosEquipo = JSON.parse(datosEquipo);
 let datosMovimientosPokemonLider = datosEquipo[0]['movimientos'];
 
 let contenedorMovimientos = document.getElementById("contenedorMovimientos");
-let contenedorCambioDePokemon = document.getElementById("contenedorCambioDePokemon");
-
-
 
 let botonMovimientoUno = document.createElement("button");
 let botonMovimientoDos = document.createElement("button");
 let botonMovimientoTres = document.createElement("button");
 let botonMovimientoCuatro = document.createElement("button");
-let botonCambioDePokemon = document.createElement("button");
 
-botonCambioDePokemon.textContent = 'Cambiar Pokemon';
-contenedorCambioDePokemon.appendChild(botonCambioDePokemon);
-botonCambioDePokemon.classList.add('botonAccion');
 
-let botonesMovimientos = [botonMovimientoUno, botonMovimientoDos, botonMovimientoTres, botonMovimientoCuatro]
+let imagenPokemonSolicitanteSlotUno = document.getElementById("imagenPokemonSolicitanteSlot0");
+let imagenPokemonSolicitanteSlotDos = document.getElementById("imagenPokemonSolicitanteSlot1");
+let imagenPokemonDestinatarioSlotUno = document.getElementById("imagenPokemonDestinatarioSlot0");
+let imagenPokemonDestinatarioSlotDos = document.getElementById("imagenPokemonDestinatarioSlot1");
+
+
+let imagenesPokemonsParaCambio = [
+    imagenPokemonSolicitanteSlotUno, 
+    imagenPokemonSolicitanteSlotDos,
+    imagenPokemonDestinatarioSlotUno,
+    imagenPokemonDestinatarioSlotDos
+]
+
+let botonesMovimientos = [
+    botonMovimientoUno,
+    botonMovimientoDos,
+    botonMovimientoTres,
+    botonMovimientoCuatro
+]
 
 let i = 0;
 botonesMovimientos.forEach(boton => {
@@ -38,11 +49,11 @@ botonesMovimientos.map((elemento, indice) => {
 });
 
 //concatena el boton de cambio a los de movimientos
-let botones = botonesMovimientos.concat([botonCambioDePokemon]);
+let listeners = botonesMovimientos.concat([...imagenesPokemonsParaCambio]);
 
 //listeners que comunican al servidor la accion elegida por los usuarios
-botones.forEach(boton => {
-    boton.addEventListener('click', AdministradorDeEventos.guardarEleccionDeAccionDeBatalla);
+listeners.forEach(elemento => {
+    elemento.addEventListener('click', AdministradorDeEventos.guardarEleccionDeAccionDeBatalla);
 });
 
 window.addEventListener("turnoListoParaEjecutarse", batalla.ejecutarTurno.bind(batalla));
