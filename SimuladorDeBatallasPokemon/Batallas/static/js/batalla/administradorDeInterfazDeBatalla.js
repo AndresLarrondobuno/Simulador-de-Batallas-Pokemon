@@ -33,6 +33,23 @@ class AdministradorDeInterfazDeBatalla {
     }
 
 
+    static actualizarBarraDeVida(rolEntrenador, porcentajeDeVidaRestante) {
+        console.log("rolEntrenador: ", rolEntrenador);
+        if (rolEntrenador === 'solicitante') {
+            var contenedorVidaRestante = document.getElementById("barraVidaRestanteSolicitante");
+        }
+        else {
+            var contenedorVidaRestante = document.getElementById("barraVidaRestanteDestinatario");
+        }
+        console.log(`width ANTES de requestAnimationFrame: ${contenedorVidaRestante.style.width}`);
+        requestAnimationFrame(() => {
+            contenedorVidaRestante.style.width = `${porcentajeDeVidaRestante}%`;
+        });
+        console.log(`width DESPUES de requestAnimationFrame: ${contenedorVidaRestante.style.width}`);
+
+    }
+
+
     static obtenerNombreDeMovimientoParaBoton(movimientos, boton) {
         let indice = boton.id[boton.id.length - 1];
         let nombreMovimiento = movimientos[indice].nombre;

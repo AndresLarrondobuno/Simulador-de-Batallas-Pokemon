@@ -1,5 +1,3 @@
-import { enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
-import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
 import { AdministradorDeInterfazDeChat } from "./administradorDeInterfazChat.js";
 import { AdministradorDeInterfazDeBatalla } from "./administradorDeInterfazDeBatalla.js";
 
@@ -91,10 +89,10 @@ class Batalla {
         }
 
         for (const entrenador of entrenadoresOrdenadosParaEjecucion) {
-            entrenador.darOrden();
-    
+            await entrenador.darOrden();
+
             AdministradorDeInterfazDeChat.imprimirRelatoDeAccionDeBatalla(entrenador.orden.mensajeDeEjecucion);
-    
+
             if (entrenador.orden.constructor.name === 'OrdenDeCambioDePokemon') {
                 AdministradorDeInterfazDeBatalla.actualizarImagenDePokemonEnCombate(entrenador);
                 let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
@@ -105,7 +103,13 @@ class Batalla {
             }
         }
 
+        let pokemonSolicitante = this.entrenadores['entrenadorSolicitante'].pokemonEnCombate;
+        let pokemonDestinatario = this.entrenadores['entrenadorDestinatario'].pokemonEnCombate;
+        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('solicitante', this.entrenadores['entrenadorSolicitante'].pokemonEnCombate.obtenerVidaRestanteComoPorcentaje());
+        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('destinatario', this.entrenadores['entrenadorDestinatario'].pokemonEnCombate.obtenerVidaRestanteComoPorcentaje());
         this.siguienteTurno();
+        console.log(`poke solicitante(restante/total/porcentaje): ${pokemonSolicitante.vida}/${pokemonSolicitante.vidaTotal}/${pokemonSolicitante.obtenerVidaRestanteComoPorcentaje()}%`);
+        console.log(`poke destinatario(restante/total/porcentaje): ${pokemonDestinatario.vida}/${pokemonDestinatario.vidaTotal}/${pokemonDestinatario.obtenerVidaRestanteComoPorcentaje()}%`);
     }
 }
 

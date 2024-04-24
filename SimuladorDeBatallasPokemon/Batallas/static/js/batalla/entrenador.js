@@ -52,7 +52,7 @@ class Entrenador {
     toString() {
         return this._rol
     }
-    
+
 
     darOrden() {
         console.log(this._rol, ": entrenador.darOrden() ejecutado");

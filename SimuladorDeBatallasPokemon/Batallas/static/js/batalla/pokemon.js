@@ -49,6 +49,11 @@ class Pokemon {
     }
 
 
+    get vidaTotal() {
+        return this._vidaTotal
+    }
+
+
     get ataque() {
         return this._ataque
     }
@@ -68,8 +73,14 @@ class Pokemon {
         return movimientos
     }
 
+
+    obtenerVidaRestanteComoPorcentaje() {
+        return Math.floor((this.vida * 100) / this.vidaTotal)
+    }
+
+
     atacar(pokemonAtacado, movimiento) {
-        let danoCausado = Math.floor(movimiento.potencia / 50) * Math.floor(this.ataque / 10)
+        let danoCausado = Math.floor(movimiento.potencia / 50) * Math.floor(this.ataque / 10) + 1;
         let vidaRestante = pokemonAtacado.vida - danoCausado;
         pokemonAtacado.vida = vidaRestante;
         return danoCausado

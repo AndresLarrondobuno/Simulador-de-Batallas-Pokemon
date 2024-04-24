@@ -8,7 +8,7 @@ class BatallaConsumer(AsyncWebsocketConsumer):
         username = str(self.scope['user'])
         self.room_name = f'room_{username}'
         self.room_group_name = f'batalla_{room_id}'
-        print("conexion desde: " + username)
+        print(f"conexion iniciada para usuario: {username}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -88,33 +88,6 @@ class BatallaConsumer(AsyncWebsocketConsumer):
             'message': actualizaciones_de_batalla,
         })
 
-        await self.send(text_data=json_contexto)
-    
-    
-    async def actualizacionDeBotonesDeMovimientos(self, contexto):
-        rol = contexto['message']['rol']
-        id = contexto['message']['id']
-        llave = f'username_{rol}_batalla_{id}'
-        print(f"metodo actualizacionDeBotonesDeMovimientos ejecutado, consumidor asociado a: {self.scope['user']}")
-
-        json_contexto = json.dumps({
-            'type':'actualizacionDeBotonesDeMovimientos',
-            'message': rol,
-        })
-        
-        '''if cache.get(llave) == 'andresporteus':
-            print(cache.get(llave), self.scope['user'])'''
-        await self.send(text_data=json_contexto)
-
-    
-    async def actualizacionDeImagenDePokemonEnCombate(self, contexto):
-        rol = contexto['message']
-        print(f"metodo actualizacionDeImagenDePokemonEnCombate ejecutado, consumidor asociado a: {self.scope['user']}")
-
-        json_contexto = json.dumps({
-            'type':'actualizacionDeImagenDePokemonEnCombate',
-            'message': rol,
-        })
         await self.send(text_data=json_contexto)
 
     

@@ -66,7 +66,7 @@ class OrdenDeAtaque extends Orden {
 
 
     mensaje(turnoActual, pokemonAtacante, pokemonAtacado, movimiento, danoCausado) {
-        return `TURNO ${turnoActual}: ${pokemonAtacante} ataco a ${pokemonAtacado} con ${movimiento} quitandole ${danoCausado} puntos de vida.`
+        return `TURNO ${turnoActual}: ${pokemonAtacante} ataco a ${pokemonAtacado}(${pokemonAtacado.vida}/${pokemonAtacado.vidaTotal}/${pokemonAtacado.obtenerVidaRestanteComoPorcentaje()}%) con ${movimiento} quitandole ${danoCausado} puntos de vida.`
     }
 }
 

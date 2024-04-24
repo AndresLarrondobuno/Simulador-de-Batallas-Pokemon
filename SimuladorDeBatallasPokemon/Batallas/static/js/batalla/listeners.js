@@ -1,8 +1,6 @@
-import { AdministradorDeEventosDOM } from "./administradorDeEventos.js";
-import { enviarMensajeAConsumidor, mensajeEnviadoAConsumidorConExito } from "../../../static/js/funcionesAuxiliares.js";
-import { batalla } from "./main.js";
-import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
+import { AdministradorDeEventosDOM } from "./administradorDeEventosDOM.js";
 
+let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
 let datosEquipo = document.getElementById("contenedorBatalla").dataset.equipo;
 datosEquipo = JSON.parse(datosEquipo);
 let datosMovimientosPokemonLider = datosEquipo[0]['movimientos'];
@@ -15,18 +13,21 @@ let botonMovimientoTres = document.createElement("button");
 let botonMovimientoCuatro = document.createElement("button");
 
 
-let imagenPokemonSolicitanteSlotUno = document.getElementById("imagenPokemonSolicitanteSlot0");
-let imagenPokemonSolicitanteSlotDos = document.getElementById("imagenPokemonSolicitanteSlot1");
-let imagenPokemonDestinatarioSlotUno = document.getElementById("imagenPokemonDestinatarioSlot0");
-let imagenPokemonDestinatarioSlotDos = document.getElementById("imagenPokemonDestinatarioSlot1");
 
 
-let imagenesPokemonsParaCambio = [
-    imagenPokemonSolicitanteSlotUno, 
-    imagenPokemonSolicitanteSlotDos,
-    imagenPokemonDestinatarioSlotUno,
-    imagenPokemonDestinatarioSlotDos
-]
+
+let imagenesPokemonsParaCambio = []
+
+if (rolUsuario === 'solicitante') {
+    let imagenPokemonSolicitanteSlotUno = document.getElementById("imagenPokemonSolicitanteSlot0");
+    let imagenPokemonSolicitanteSlotDos = document.getElementById("imagenPokemonSolicitanteSlot1");
+    imagenesPokemonsParaCambio.push(imagenPokemonSolicitanteSlotUno, imagenPokemonSolicitanteSlotDos);
+}
+else {
+    let imagenPokemonDestinatarioSlotUno = document.getElementById("imagenPokemonDestinatarioSlot0");
+    let imagenPokemonDestinatarioSlotDos = document.getElementById("imagenPokemonDestinatarioSlot1");
+    imagenesPokemonsParaCambio.push(imagenPokemonDestinatarioSlotUno, imagenPokemonDestinatarioSlotDos);
+}
 
 let botonesMovimientos = [
     botonMovimientoUno,

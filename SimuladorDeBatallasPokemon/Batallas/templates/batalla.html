@@ -8,6 +8,7 @@
     Batalla #{{ id }}: {{ usuario_solicitante }} vs {{ usuario_destinatario }}
 </h3>
 
+
 <div class="contenedorBatalla" id="contenedorBatalla" data-equipo="{{ datos_equipo_usuario_actual }}">
 
     <div id="equipoSolicitante" class="contenedorEquipoSolicitante" data-equipo-solicitante="{{ datos_equipo_usuario_solicitante }}">
@@ -41,12 +42,26 @@
 
     </div>
 
+
     <div id="contenedorPokemonEnCombateSolicitante" class="contenedorPokemonEnCombateSolicitante">
+
+        <div class="barra-vida">
+            <div id="barraVidaRestanteSolicitante" class="vida-restante"></div>
+        </div>
+
         <img id="imagenPokemonEnCombateSolicitante" src="data:image/png;base64,{{ modelo_equipo_solicitante.pokemon_set.first.especie.obtenerImagenFrente }}">
+
     </div>
 
+
     <div class="contenedorPokemonEnCombateDestinatario">
+
+        <div class="barra-vida">
+            <div id="barraVidaRestanteDestinatario" class="vida-restante"></div>
+        </div>
+
         <img id="imagenPokemonEnCombateDestinatario" src="data:image/png;base64,{{ modelo_equipo_destinatario.pokemon_set.first.especie.obtenerImagenFrente }}">
+
     </div>
 
 
