@@ -1,4 +1,6 @@
 import { Movimiento } from "./movimiento.js";
+import { primeraLetraMayuscula } from "../../../static/js/funcionesAuxiliares.js";
+
 
 class Pokemon {
     constructor(datosPokemon) {
@@ -16,6 +18,10 @@ class Pokemon {
         this._defensaEspecial = datosPokemon['defensaEspecial'];
         this._velocidad = datosPokemon['velocidad'];
         this._enCombate = false;
+        
+        this._equipo = null;
+        this._entrenador = null;
+        this._enProcesoDeCambioForzado = false;
     }
 
 
@@ -24,9 +30,20 @@ class Pokemon {
     }
 
 
+    get vivo() {
+        if (this.vida > 0) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+
     get movimientos() {
         return this._movimientos
     }
+
 
 
     set enCombate(seEncuentraEnCombate) {
@@ -36,6 +53,26 @@ class Pokemon {
 
     set vida(vidaRestante) {
         this._vida = vidaRestante;
+    }
+
+
+    set equipo(equipo) {
+        this._equipo = equipo;
+    }
+
+
+    set enProcesoDeCambioForzado(bool) {
+        this._enProcesoDeCambioForzado = bool;
+    }
+
+
+    get enProcesoDeCambioForzado() {
+        return this._enProcesoDeCambioForzado
+    }
+
+
+    get equipo() {
+        return this._equipo;
     }
 
 
@@ -64,6 +101,16 @@ class Pokemon {
     }
 
 
+    get entrenador() {
+        return this._entrenador
+    }
+
+
+    set entrenador(entrenador) {
+        this._entrenador = entrenador;
+    }
+
+
     obtenerMovimientos(datosMovimientos) {
         let movimientos = [];
         datosMovimientos.forEach(datosMovimiento => {
@@ -79,11 +126,29 @@ class Pokemon {
     }
 
 
+    obtenerImagen() {
+        let posicionEnEquipo =  this._equipo._pokemons.indexOf(this);
+        let rolConMayusculaInicial = primeraLetraMayuscula(this.entrenador.rol);
+        let idElementoImagen = `imagenPokemon${rolConMayusculaInicial}Slot${posicionEnEquipo}`;
+        return document.getElementById(idElementoImagen);
+    }
+    
+
     atacar(pokemonAtacado, movimiento) {
-        let danoCausado = Math.floor(movimiento.potencia / 50) * Math.floor(this.ataque / 10) + 1;
-        let vidaRestante = pokemonAtacado.vida - danoCausado;
-        pokemonAtacado.vida = vidaRestante;
-        return danoCausado
+        if (this.vida > 0) {
+            let danoCausado = Math.floor(movimiento.potencia / 50) * Math.floor(this.ataque / 10) + 1;
+            let vidaRestante = pokemonAtacado.vida - danoCausado;
+            pokemonAtacado.vida = vidaRestante;
+            return {
+                'danoCausado': danoCausado,
+                'ataqueFueEjecutado': true
+            }
+        }
+        else {
+            return {
+                'ataqueFueEjecutado': false
+            }
+        }
     }
 
 }

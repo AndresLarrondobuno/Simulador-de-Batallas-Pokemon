@@ -3,39 +3,70 @@ import { websocket } from "./iniciarConexionWs.js";
 import { AdministradorDeInterfazDeChat } from "../batalla/administradorDeInterfazChat.js"
 import { AdministradorDeOrdenes } from "../batalla/administradorDeOrdenes.js";
 import { AdministradorDeInterfazDeBatalla } from "../batalla/administradorDeInterfazDeBatalla.js";
+import { AdministradorDeEventosDeBatalla } from "../batalla/administradorDeEventosDeBatalla.js";
+import {
+    obtenerRolDeBatallaDeUsuario,
+    obtenerContenedorDeImagenesParaCambioAPartirDeRol,
+    obtenerPokemonAPartirDeIdDeImagen
+} from "../../../static/js/funcionesAuxiliares.js";
+
 
 //(4) OUTPUT
-function manejarEventoMessage(evento) {
-    let datos = JSON.parse(evento.data);
+function manejarMensajeDeServidor(evento) {
+    let respuesta = JSON.parse(evento.data);
 
-    if (datos.type === 'mensajeDeUsuario') {
-        let mensaje = datos.message;
+    if (respuesta.type === 'mensajeDeUsuario') {
+        let mensaje = respuesta.message;
         AdministradorDeInterfazDeChat.imprimirMensajeDeUsuario(mensaje);
     }
-    if (datos.type === 'relatoDeAccionDeBatalla') {
-        let mensaje = datos.message;
+
+    if (respuesta.type === 'relatoDeAccionDeBatalla') {
+        let mensaje = respuesta.message;
         AdministradorDeInterfazDeChat.imprimirRelatoDeAccionDeBatalla(mensaje);
     }
-    if (datos.type === 'actualizacionDeEstadoDeBatalla') {
-        let datosBatalla = datos.message;
-        AdministradorDeOrdenes.asignarOrdenes(batalla, datosBatalla);
-        batalla.ejecutarTurno();
+
+    if (respuesta.type === 'actualizacionDeEstadoDeBatalla') {
+        let datosBatallaActualizados = respuesta.message;
+        AdministradorDeOrdenes.asignarOrdenes(batalla, datosBatallaActualizados);
+        AdministradorDeEventosDeBatalla.ejecutarTurno();
+        AdministradorDeEventosDeBatalla.siguienteTurno();
 
     }
 
-
-    if (datos.type === 'actualizacionDeImagenDePokemonEnCombate') {
-        let rol = datos.message;
+    if (respuesta.type === 'actualizacionDeImagenDePokemonEnCombate') {
+        let rol = respuesta.message;
         let entrenador = batalla.obtenerEntrenadorPorRol(rol);
         AdministradorDeInterfazDeBatalla.actualizarImagenDePokemonEnCombate(entrenador);
     }
-    if (datos.type === 'actualizacionDeBotonesDeMovimientos') {
-        let rol = datos.message.rol;
+
+    if (respuesta.type === 'actualizacionDeBotonesDeMovimientos') {
+        let rol = respuesta.message.rol;
         let entrenador = batalla.obtenerEntrenadorPorRol(rol);
-        console.log("(manejarEventoMessage, tipo 'actualizacionDeBotonesDeMovimientos') entrenador: ", entrenador);
         AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
     }
 
+    if (respuesta.type === 'notificacionDeMuerteDePokemon') {
+        let rol = respuesta.message;
+
+        if (rol === obtenerRolDeBatallaDeUsuario()) {
+            AdministradorDeInterfazDeBatalla.desactivarListenersDeAccionesDeBatalla();
+            let entrenador = batalla.obtenerEntrenadorPorRol(rol);
+
+            entrenador.equipo.pokemons.forEach(pokemon => {
+                if (pokemon.vivo) {
+                    pokemon.enProcesoDeCambioForzado = true;
+                    let imagen = pokemon.obtenerImagen();
+                    AdministradorDeInterfazDeBatalla.iniciarAnimacionDePulso(imagen);
+                    imagen.addEventListener("click", AdministradorDeEventosDeBatalla.ejecutarCambioForzadoPorMuerte());
+                    //imagen.addEventListener("click", AdministradorDeEventosDeBatalla.ejecutarCambioForzadoPorMuerte());
+                }
+            });
+        }
+    }
+
+    if (respuesta.type === 'notificacionDeCambioForzado') {
+
+    }
 }
 
 
@@ -64,4 +95,4 @@ let formularioParaEnviarMensajeAServidor = document.getElementById("formularioPa
 formularioParaEnviarMensajeAServidor.addEventListener('submit', enviarMensajeDeUsuarioViaWebsocket);
 
 //(4) OUTPUT
-websocket.onmessage = manejarEventoMessage; //handler para evento websocket 'message'
+websocket.onmessage = manejarMensajeDeServidor; //handler para evento websocket 'message'

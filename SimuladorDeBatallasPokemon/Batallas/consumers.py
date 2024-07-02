@@ -89,6 +89,30 @@ class BatallaConsumer(AsyncWebsocketConsumer):
         })
 
         await self.send(text_data=json_contexto)
+        
+        
+    async def notificacionDeMuerteDePokemon(self, contexto):
+        mensaje = contexto['message']
+        print(f"metodo notificacionDeMuerteDePokemon ejecutado, consumidor asociado a: {self.scope['user']}")
+
+        json_contexto = json.dumps({
+            'type':'notificacionDeMuerteDePokemon',
+            'message': mensaje,
+        })
+
+        await self.send(text_data=json_contexto)
+        
+        
+    async def notificacionDeCambioForzado(self, contexto):
+        mensaje = contexto['message']
+        print(f"metodo notificacionDeMuerteDePokemon ejecutado, consumidor asociado a: {self.scope['user']}")
+
+        json_contexto = json.dumps({
+            'type':'notificacionDeMuerteDePokemon',
+            'message': mensaje,
+        })
+
+        await self.send(text_data=json_contexto)
 
     
     

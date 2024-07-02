@@ -1,8 +1,9 @@
 import { Equipo } from "./equipo.js"
 import { Entrenador } from "./entrenador.js"
 import { Batalla } from "./batalla.js"
+import { obtenerRolDeBatallaDeUsuario } from "../../../static/js/funcionesAuxiliares.js";
 
-let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
+let rolUsuario = obtenerRolDeBatallaDeUsuario();
 
 let datosEquipoSolicitante = JSON.parse(document.getElementById("equipoSolicitante").dataset.equipoSolicitante);
 let datosEquipoDestinatario = JSON.parse(document.getElementById("equipoDestinatario").dataset.equipoDestinatario);

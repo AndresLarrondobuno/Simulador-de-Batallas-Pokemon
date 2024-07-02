@@ -3,6 +3,12 @@ class Orden {
         this._entrenador = entrenador;
         this._prioridad = null;
         this._mensajeDeEjecucion = null;
+        this._tipo = this.constructor.name;
+    }
+
+
+    get tipo() {
+        return this._tipo
     }
 
 
@@ -58,10 +64,26 @@ class OrdenDeAtaque extends Orden {
         let pokemonAtacante = this.entrenador.pokemonEnCombate;
         let pokemonAtacado = entrenadorOponente.pokemonEnCombate;
         let movimiento = pokemonAtacante.movimientos[this.indiceMovimiento];
-        let danoCausado = pokemonAtacante.atacar(pokemonAtacado, movimiento);
+        let informacionDeAtaque = pokemonAtacante.atacar(pokemonAtacado, movimiento);
+        let danoCausado = informacionDeAtaque['danoCausado'];
+        let ataqueFueEjecutado = informacionDeAtaque['ataqueFueEjecutado'];
 
-        this.mensajeDeEjecucion = this.mensaje(turnoActual, pokemonAtacante, pokemonAtacado, movimiento, danoCausado);
+        if (ataqueFueEjecutado) {
+            this.mensajeDeEjecucion = this.mensaje(turnoActual, pokemonAtacante, pokemonAtacado, movimiento, danoCausado);
 
+            if (!pokemonAtacado.vivo) {
+                console.log(`${pokemonAtacante} vencio a ${pokemonAtacado}.`);
+            }
+
+        }
+        else {
+            this.mensajeDeEjecucion = `${pokemonAtacante} no pudo atacar porque fue vencido.`;
+        }
+
+        return {
+            'tipoDeOrden': 'ataque',
+            'ataqueFueEjecutado': ataqueFueEjecutado
+        };
     }
 
 
@@ -95,6 +117,11 @@ class OrdenDeCambioDePokemon extends Orden {
         pokemonEntrante.enCombate = true;
 
         this.mensajeDeEjecucion = this.mensaje(turnoActual, pokemonEntrante, pokemonSaliente);
+
+        return {
+            'tipoDeOrden': 'cambioDePokemon'
+        };
+
     }
 
 

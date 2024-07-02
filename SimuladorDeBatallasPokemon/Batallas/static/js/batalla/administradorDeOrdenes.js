@@ -29,6 +29,7 @@ class AdministradorDeOrdenes {
 
         AdministradorDeOrdenes.asignarOrden(entrenadorSolicitante, informacionDeOrdenSolicitante);
         AdministradorDeOrdenes.asignarOrden(entrenadorDestinatario, informacionDeOrdenDestinatario);
+        console.log(datosBatalla);
     }
 
 

@@ -66,6 +66,12 @@ class BatallasController():
         
         #comunicar el estado de la batalla (de la eleccion de cada usuario en determinado turno)
         return JsonResponse(batallas[id_batalla][turno_actual], safe=False)
+    
+    
+    def cambio_forzado(self, request):
+        datos = json.loads(request.body)
+        
+        return
 
 
     def batalla(self, request, id):

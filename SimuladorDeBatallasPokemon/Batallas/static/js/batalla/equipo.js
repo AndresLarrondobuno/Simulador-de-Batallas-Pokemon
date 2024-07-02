@@ -3,14 +3,16 @@ import { Pokemon } from "./pokemon.js";
 class Equipo {
     constructor(datosEquipo) {
         this._pokemons = this.obtenerPokemons(datosEquipo);
-        this._pokemons[0].enCombate = true; //falgeo al lider(pokemon en combate) con propiedad enCombate
+        this._pokemons[0].enCombate = true; //flageo al lider(pokemon en combate) con propiedad enCombate
         this._tamano = datosEquipo.length;
+        this._entrenador = null;
     }
 
     obtenerPokemons(datosEquipo) {
         let pokemons = [];
         datosEquipo.forEach(datosPokemon => {
             let pokemon = new Pokemon(datosPokemon);
+            pokemon.equipo = this;
             pokemons.push(pokemon);
         });
         return pokemons
@@ -24,6 +26,16 @@ class Equipo {
 
     get tamano() {
         return this._tamano
+    }
+
+
+    get entrenador() {
+        return this._entrenador
+    }
+
+
+    set entrenador(entrenador) {
+        this._entrenador = entrenador;
     }
 
 

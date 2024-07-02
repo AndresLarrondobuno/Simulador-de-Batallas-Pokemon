@@ -4,44 +4,41 @@
 
 {% block contenido_principal %}
 
-<h3 class="titulo" id="tituloBatalla" data-id="{{ id }}" data-rol-usuario="{{ rol_usuario }}">
-    Batalla #{{ id }}: {{ usuario_solicitante }} vs {{ usuario_destinatario }}
-</h3>
+<div id="datosBatalla" data-id="{{ id }}" data-rol-usuario="{{ rol_usuario }}"></div>
+
+<div id="equipoSolicitante" class="contenedorEquipoSolicitante" data-equipo-solicitante="{{ datos_equipo_usuario_solicitante }}">
+
+    {% for pokemon in modelo_equipo_solicitante.pokemon_set.all %}
+
+        <div id="{{ 'contenedorPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}">
+
+            <h5>{{ pokemon.obtener_nombre }}</h5>
+            <img id="{{ 'imagenPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
+            
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+<div id="equipoDestinatario" class="contenedorEquipoDestinatario" data-equipo-destinatario="{{ datos_equipo_usuario_destinatario }}">
+
+    {% for pokemon in modelo_equipo_destinatario.pokemon_set.all %}
+
+        <div id="{{ 'contenedorPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}">
+
+            <h5>{{ pokemon.obtener_nombre }}</h5>
+            <img id="{{ 'imagenPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
+
+        </div>
+
+    {% endfor %}
+
+</div>
 
 
 <div class="contenedorBatalla" id="contenedorBatalla" data-equipo="{{ datos_equipo_usuario_actual }}">
-
-    <div id="equipoSolicitante" class="contenedorEquipoSolicitante" data-equipo-solicitante="{{ datos_equipo_usuario_solicitante }}">
-
-        {% for pokemon in modelo_equipo_solicitante.pokemon_set.all %}
-
-            <div id="{{ 'contenedorPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}">
-
-                <h5>{{ pokemon.obtener_nombre }}</h5>
-                <img id="{{ 'imagenPokemonSolicitanteSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
-                
-            </div>
-
-        {% endfor %}
-
-    </div>
-
-
-    <div id="equipoDestinatario" class="contenedorEquipoDestinatario" data-equipo-destinatario="{{ datos_equipo_usuario_destinatario }}">
-
-        {% for pokemon in modelo_equipo_destinatario.pokemon_set.all %}
-
-            <div id="{{ 'contenedorPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}">
-
-                <h5>{{ pokemon.obtener_nombre }}</h5>
-                <img id="{{ 'imagenPokemonDestinatarioSlot'|concatenar_strings:forloop.counter0 }}" src="data:image/png;base64,{{ pokemon.especie.obtenerImagenFrente }}" alt="{{ pokemon.nombre }}">
-
-            </div>
-
-        {% endfor %}
-
-    </div>
-
 
     <div id="contenedorPokemonEnCombateSolicitante" class="contenedorPokemonEnCombateSolicitante">
 
@@ -66,7 +63,6 @@
 
 
     <div id="contenedorMovimientos" class="contenedorMovimientos" ></div>
-    
 
 </div>
 

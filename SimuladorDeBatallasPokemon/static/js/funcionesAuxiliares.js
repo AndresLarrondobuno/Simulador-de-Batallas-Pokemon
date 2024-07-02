@@ -51,6 +51,38 @@ function mensajeEnviadoAConsumidorConExito() {
 }
 
 
+function obtenerIdDeBatalla() {
+    return document.getElementById("datosBatalla").dataset.id;
+
+}
+
+
+function obtenerRolDeBatallaDeUsuario() {
+    return document.getElementById("datosBatalla").dataset.rolUsuario;
+}
+
+
+function primeraLetraMayuscula(cadena) {
+    if (cadena.length === 0) return "";
+    return cadena[0].toUpperCase() + cadena.slice(1);
+}
+
+
+function obtenerContenedorDeImagenesParaCambioAPartirDeRol(rol) {
+    let rolConMayusculaInicial = primeraLetraMayuscula(rol);
+    let idContenedor = `equipo${rolConMayusculaInicial}`;
+    return document.getElementById(idContenedor);
+}
+
+
+function obtenerPokemonAPartirDeIdDeImagen(batalla, rol, id) {
+    let indice = id[id.length - 1];
+    let entrenador = batalla.obtenerEntrenadorPorRol(rol);
+    return entrenador.equipo.pokemons[indice];
+
+}
+
+
 const csrftoken = getCookie('csrftoken');
 
 export {
@@ -60,4 +92,9 @@ export {
     agregarOpcionesASelectAPartirDeResultadosDeBusqueda,
     enviarMensajeAConsumidor,
     mensajeEnviadoAConsumidorConExito,
+    obtenerIdDeBatalla,
+    obtenerRolDeBatallaDeUsuario,
+    obtenerContenedorDeImagenesParaCambioAPartirDeRol,
+    obtenerPokemonAPartirDeIdDeImagen,
+    primeraLetraMayuscula
 };

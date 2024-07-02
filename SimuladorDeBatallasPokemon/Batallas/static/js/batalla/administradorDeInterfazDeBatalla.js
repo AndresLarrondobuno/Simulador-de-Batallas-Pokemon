@@ -1,3 +1,5 @@
+import { AdministradorDeEventosDeBatalla } from "./administradorDeEventosDeBatalla.js";
+import { elementosConListenerParaEleccionVoluntariaDeUsuario } from "./listeners.js";
 
 class AdministradorDeInterfazDeBatalla {
     static actualizarImagenDePokemonEnCombate(entrenador) {
@@ -34,18 +36,17 @@ class AdministradorDeInterfazDeBatalla {
 
 
     static actualizarBarraDeVida(rolEntrenador, porcentajeDeVidaRestante) {
-        console.log("rolEntrenador: ", rolEntrenador);
         if (rolEntrenador === 'solicitante') {
             var contenedorVidaRestante = document.getElementById("barraVidaRestanteSolicitante");
         }
         else {
             var contenedorVidaRestante = document.getElementById("barraVidaRestanteDestinatario");
         }
-        console.log(`width ANTES de requestAnimationFrame: ${contenedorVidaRestante.style.width}`);
-        requestAnimationFrame(() => {
-            contenedorVidaRestante.style.width = `${porcentajeDeVidaRestante}%`;
+
+        if (porcentajeDeVidaRestante < 0) { porcentajeDeVidaRestante = 0; }
+            requestAnimationFrame(() => {
+                contenedorVidaRestante.style.width = `${porcentajeDeVidaRestante}%`;
         });
-        console.log(`width DESPUES de requestAnimationFrame: ${contenedorVidaRestante.style.width}`);
 
     }
 
@@ -55,6 +56,31 @@ class AdministradorDeInterfazDeBatalla {
         let nombreMovimiento = movimientos[indice].nombre;
         return nombreMovimiento
     }
+
+    
+    static iniciarAnimacionDePulso(elementoImagen) {
+        elementoImagen.classList.add("imagenPulsante");
+    }
+    
+
+    static terminarAnimacionDePulso(elementoImagen) {
+        elementoImagen.classList.remove("imagenPulsante");
+    }
+
+
+    static desactivarListenersDeAccionesDeBatalla() {
+        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
+            elemento.removeEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+        });
+    }
+
+
+    static activarListenersDeAccionesDeBatalla() {
+        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
+            elemento.addEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+        });
+    }
+
 }
 
 export { AdministradorDeInterfazDeBatalla };

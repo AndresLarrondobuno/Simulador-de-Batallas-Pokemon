@@ -4,6 +4,12 @@ class Entrenador {
         this._equipo = equipo;
         this._orden = null;
         this._batalla = null;
+
+        this.equipo.entrenador = this;
+
+        equipo.pokemons.forEach(pokemon => {
+            pokemon.entrenador = this;
+        });
     }
 
 
@@ -56,18 +62,13 @@ class Entrenador {
 
     darOrden() {
         console.log(this._rol, ": entrenador.darOrden() ejecutado");
-        if (this.orden) {
-            this.orden.ejecutar();
+        if (!this.orden.ejecutar()) {
+            console.log(`${this.pokemonEnCombate} no pudo atacar porque fue vencido.`);
+            //ofrecer cambio de pokemon
         }
         else {
-            console.log(`el entrenador ${this.rol} no posee una orden asignada.`)
+            console.log(`el entrenador ${this.rol} ejecuto una ${this.orden.tipo}`);
         }
-    }
-
-
-    cambiarPokemon(pokemonEntrante) {
-        pokemonEntrante.enCombate = true;
-        this.pokemonEnCombate.enCombate = false;
     }
 
 }

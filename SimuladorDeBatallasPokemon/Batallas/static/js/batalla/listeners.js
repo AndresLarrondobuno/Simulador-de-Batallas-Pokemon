@@ -1,6 +1,7 @@
-import { AdministradorDeEventosDOM } from "./administradorDeEventosDOM.js";
+import { AdministradorDeEventosDeBatalla } from "./administradorDeEventosDeBatalla.js";
+import { obtenerRolDeBatallaDeUsuario } from "../../../static/js/funcionesAuxiliares.js";
 
-let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
+let rolUsuario = obtenerRolDeBatallaDeUsuario();
 let datosEquipo = document.getElementById("contenedorBatalla").dataset.equipo;
 datosEquipo = JSON.parse(datosEquipo);
 let datosMovimientosPokemonLider = datosEquipo[0]['movimientos'];
@@ -13,10 +14,7 @@ let botonMovimientoTres = document.createElement("button");
 let botonMovimientoCuatro = document.createElement("button");
 
 
-
-
-
-let imagenesPokemonsParaCambio = []
+let imagenesPokemonsParaCambio = [];
 
 if (rolUsuario === 'solicitante') {
     let imagenPokemonSolicitanteSlotUno = document.getElementById("imagenPokemonSolicitanteSlot0");
@@ -52,9 +50,14 @@ botonesMovimientos.map((elemento, indice) => {
 });
 
 //concatena el boton de cambio a los de movimientos
-let listeners = botonesMovimientos.concat([...imagenesPokemonsParaCambio]);
+let elementosConListenerParaEleccionVoluntariaDeUsuario = botonesMovimientos.concat([...imagenesPokemonsParaCambio]);
 
-//listeners que comunican al servidor la accion elegida por los usuarios
-listeners.forEach(elemento => {
-    elemento.addEventListener('click', AdministradorDeEventosDOM.guardarEleccionDeAccionDeBatalla);
+//asigna listeners que comunican al servidor la accion elegida por los usuarios
+elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
+    elemento.addEventListener('click', AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
 });
+
+console.log("listeners: ", elementosConListenerParaEleccionVoluntariaDeUsuario);
+console.log(elementosConListenerParaEleccionVoluntariaDeUsuario.length);
+
+export {elementosConListenerParaEleccionVoluntariaDeUsuario};

@@ -1,5 +1,4 @@
-import { AdministradorDeInterfazDeChat } from "./administradorDeInterfazChat.js";
-import { AdministradorDeInterfazDeBatalla } from "./administradorDeInterfazDeBatalla.js";
+import { obtenerIdDeBatalla } from "../../../static/js/funcionesAuxiliares.js";
 
 class Batalla {
     constructor(entrenadorSolicitante, entrenadorDestinatario) {
@@ -12,8 +11,9 @@ class Batalla {
         entrenadorDestinatario.batalla = this;
 
         this._turnoActual = 1;
-        this._id = document.getElementById("tituloBatalla").dataset.id;
+        this._id = obtenerIdDeBatalla();
     }
+
 
     get id() {
         return this._id
@@ -30,11 +30,6 @@ class Batalla {
     }
 
 
-    siguienteTurno() {
-        this._turnoActual++;
-    }
-
-
     obtenerEntrenadorPorRol(rol) {
         if (rol === 'solicitante') {
             return this._entrenadores["entrenadorSolicitante"]
@@ -45,6 +40,12 @@ class Batalla {
         else {
             console.log(`rol invalido: ${rol}`);
         }
+    }
+
+
+    obtenerEntrenadorParaCambioForzado() {
+        let arrayEntrenadores = Object.values(this.entrenadores);
+        return arrayEntrenadores.find(entrenador => !entrenador.pokemonEnCombate.vivo);
     }
 
 
@@ -78,39 +79,12 @@ class Batalla {
     }
 
 
-    async ejecutarTurno() {
-        console.log("ambasOrdenesSonDeAtaque() -> ", this.ambasOrdenesSonDeAtaque());
 
-        if (this.ambasOrdenesSonDeAtaque()) {
-            var entrenadoresOrdenadosParaEjecucion = this.obtenerOrdenDeEjecucionPorVelocidad();
-        }
-        else {
-            var entrenadoresOrdenadosParaEjecucion = this.obtenerOrdenDeEjecucionPorPrioridad();
-        }
-
-        for (const entrenador of entrenadoresOrdenadosParaEjecucion) {
-            await entrenador.darOrden();
-
-            AdministradorDeInterfazDeChat.imprimirRelatoDeAccionDeBatalla(entrenador.orden.mensajeDeEjecucion);
-
-            if (entrenador.orden.constructor.name === 'OrdenDeCambioDePokemon') {
-                AdministradorDeInterfazDeBatalla.actualizarImagenDePokemonEnCombate(entrenador);
-                let rolUsuario = document.getElementById("tituloBatalla").dataset.rolUsuario;
-
-                if (entrenador.rol === rolUsuario) {
-                    AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
-                }
-            }
-        }
-
-        let pokemonSolicitante = this.entrenadores['entrenadorSolicitante'].pokemonEnCombate;
-        let pokemonDestinatario = this.entrenadores['entrenadorDestinatario'].pokemonEnCombate;
-        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('solicitante', this.entrenadores['entrenadorSolicitante'].pokemonEnCombate.obtenerVidaRestanteComoPorcentaje());
-        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('destinatario', this.entrenadores['entrenadorDestinatario'].pokemonEnCombate.obtenerVidaRestanteComoPorcentaje());
-        this.siguienteTurno();
-        console.log(`poke solicitante(restante/total/porcentaje): ${pokemonSolicitante.vida}/${pokemonSolicitante.vidaTotal}/${pokemonSolicitante.obtenerVidaRestanteComoPorcentaje()}%`);
-        console.log(`poke destinatario(restante/total/porcentaje): ${pokemonDestinatario.vida}/${pokemonDestinatario.vidaTotal}/${pokemonDestinatario.obtenerVidaRestanteComoPorcentaje()}%`);
+    pokemonFueVencido() {
+        let arrayEntrenadores = Object.values(this.entrenadores);
+        return arrayEntrenadores.some(entrenador => !entrenador.pokemonEnCombate.vivo);
     }
+
 }
 
 export { Batalla };
