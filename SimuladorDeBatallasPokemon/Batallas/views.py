@@ -60,9 +60,9 @@ class BatallasController():
             print('(view) solicitante_eligio_accion: ', solicitante_eligio_accion)
             print('(view) destinatario_eligio_accion: ', destinatario_eligio_accion)
 
-        print("batalla actual: ", batallas[id_batalla])
+        '''print("batalla actual: ", batallas[id_batalla])
         print("turno actual: ", batallas[id_batalla][turno_actual])
-        print()
+        print()'''
         
         #comunicar el estado de la batalla (de la eleccion de cada usuario en determinado turno)
         return JsonResponse(batallas[id_batalla][turno_actual], safe=False)

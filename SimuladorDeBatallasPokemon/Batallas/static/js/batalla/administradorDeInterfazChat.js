@@ -14,6 +14,7 @@ class AdministradorDeInterfazDeChat {
         elementoMensaje.textContent = mensaje;
         contenedorMensajes.appendChild(elementoMensaje);
     }
+
 }
 
 export { AdministradorDeInterfazDeChat };

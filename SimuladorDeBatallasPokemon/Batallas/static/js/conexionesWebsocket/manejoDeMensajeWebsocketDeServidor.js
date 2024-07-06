@@ -4,15 +4,15 @@ import { AdministradorDeInterfazDeChat } from "../batalla/administradorDeInterfa
 import { AdministradorDeOrdenes } from "../batalla/administradorDeOrdenes.js";
 import { AdministradorDeInterfazDeBatalla } from "../batalla/administradorDeInterfazDeBatalla.js";
 import { AdministradorDeEventosDeBatalla } from "../batalla/administradorDeEventosDeBatalla.js";
+import { AdministradorDeListenersDeElementosHTML } from "../batalla/listeners.js";
 import {
     obtenerRolDeBatallaDeUsuario,
-    obtenerContenedorDeImagenesParaCambioAPartirDeRol,
-    obtenerPokemonAPartirDeIdDeImagen
 } from "../../../static/js/funcionesAuxiliares.js";
 
 
 //(4) OUTPUT
 function manejarMensajeDeServidor(evento) {
+
     let respuesta = JSON.parse(evento.data);
 
     if (respuesta.type === 'mensajeDeUsuario') {
@@ -30,7 +30,6 @@ function manejarMensajeDeServidor(evento) {
         AdministradorDeOrdenes.asignarOrdenes(batalla, datosBatallaActualizados);
         AdministradorDeEventosDeBatalla.ejecutarTurno();
         AdministradorDeEventosDeBatalla.siguienteTurno();
-
     }
 
     if (respuesta.type === 'actualizacionDeImagenDePokemonEnCombate') {
@@ -46,26 +45,39 @@ function manejarMensajeDeServidor(evento) {
     }
 
     if (respuesta.type === 'notificacionDeMuerteDePokemon') {
-        let rol = respuesta.message;
+        //la batalla entra en estado de 'pausa' hasta que el pokemon vencido sea cambiado
+        AdministradorDeListenersDeElementosHTML.desactivarListenersDeAccionesDeBatalla();
+        let rol = respuesta.rol;
+        let entrenador = batalla.obtenerEntrenadorPorRol(rol);
+        
+        if (!entrenador.tienePokemonsVivos) {
+            AdministradorDeEventosDeBatalla.notificarFinalizacionDeBatalla();
+        }
 
         if (rol === obtenerRolDeBatallaDeUsuario()) {
-            AdministradorDeInterfazDeBatalla.desactivarListenersDeAccionesDeBatalla();
             let entrenador = batalla.obtenerEntrenadorPorRol(rol);
 
             entrenador.equipo.pokemons.forEach(pokemon => {
                 if (pokemon.vivo) {
-                    pokemon.enProcesoDeCambioForzado = true;
                     let imagen = pokemon.obtenerImagen();
                     AdministradorDeInterfazDeBatalla.iniciarAnimacionDePulso(imagen);
-                    imagen.addEventListener("click", AdministradorDeEventosDeBatalla.ejecutarCambioForzadoPorMuerte());
-                    //imagen.addEventListener("click", AdministradorDeEventosDeBatalla.ejecutarCambioForzadoPorMuerte());
+                    imagen.addEventListener("click", event => { AdministradorDeEventosDeBatalla.notificarCambioForzado(event, entrenador) });
                 }
             });
         }
     }
 
     if (respuesta.type === 'notificacionDeCambioForzado') {
+        let rol = respuesta.rol;
+        let indicePokemonVencido = respuesta.indicePokemonVencido;
+        let indicePokemonEntrante = respuesta.indicePokemonEntrante;
+        let entrenadorParaCambioForzado = batalla.obtenerEntrenadorPorRol(rol);
+        let pokemonVencido = entrenadorParaCambioForzado.equipo.pokemons[indicePokemonVencido];
 
+        AdministradorDeEventosDeBatalla.ejecutarCambioForzadoPorMuerte(entrenadorParaCambioForzado, indicePokemonEntrante);
+        AdministradorDeInterfazDeBatalla.terminarAnimacionesDePulsoDeEquipo(entrenadorParaCambioForzado);
+        AdministradorDeListenersDeElementosHTML.quitarListenerDeClickAElemento(pokemonVencido.obtenerImagen());
+        AdministradorDeListenersDeElementosHTML.activarListenersDeAccionesDeBatalla();
     }
 }
 
@@ -83,7 +95,7 @@ function enviarMensajeDeUsuarioViaWebsocket(event) {
         'username': username,
     });
 
-    websocket.send(mensajeJSON);//cambiar por metodo auxiliar enviarMensajeAConsumidor
+    websocket.send(mensajeJSON);
 
     formularioParaEnviarMensajeAServidor.reset();
 }

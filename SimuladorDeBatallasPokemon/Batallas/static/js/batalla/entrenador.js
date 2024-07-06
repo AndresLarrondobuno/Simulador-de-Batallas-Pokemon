@@ -4,6 +4,7 @@ class Entrenador {
         this._equipo = equipo;
         this._orden = null;
         this._batalla = null;
+        this._pokemonsMuertos = [];
 
         this.equipo.entrenador = this;
 
@@ -30,6 +31,11 @@ class Entrenador {
 
     get equipo() {
         return this._equipo
+    }
+
+
+    get pokemonsMuertos() {
+        return this._pokemonsMuertos
     }
 
 
@@ -69,6 +75,11 @@ class Entrenador {
         else {
             console.log(`el entrenador ${this.rol} ejecuto una ${this.orden.tipo}`);
         }
+    }
+
+
+    agregarPokemonAPokemonsMuertos(pokemon) {
+        this._pokemonsMuertos.push(pokemon);
     }
 
 }

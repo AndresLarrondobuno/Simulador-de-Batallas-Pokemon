@@ -75,11 +75,22 @@ function obtenerContenedorDeImagenesParaCambioAPartirDeRol(rol) {
 }
 
 
-function obtenerPokemonAPartirDeIdDeImagen(batalla, rol, id) {
-    let indice = id[id.length - 1];
+function obtenerPokemonAPartirDeIdDeImagen(batalla, rol, idImagen) {
+    let indiceEnEquipo = idImagen[idImagen.length - 1];
     let entrenador = batalla.obtenerEntrenadorPorRol(rol);
-    return entrenador.equipo.pokemons[indice];
+    return entrenador.equipo.pokemons[indiceEnEquipo];
 
+}
+
+
+function imprimirEstadoDePokemonsEnCombate() {
+    let pokemonSolicitante = batalla.entrenadores['entrenadorSolicitante'].pokemonEnCombate;
+    let pokemonDestinatario = batalla.entrenadores['entrenadorDestinatario'].pokemonEnCombate;
+    console.log(`poke solicitante(restante/total/porcentaje): ${pokemonSolicitante.vida}/ ${pokemonSolicitante.vidaTotal}/ ${pokemonSolicitante.obtenerVidaRestanteComoPorcentaje()}%`);
+    console.log(`poke destinatario(restante/total/porcentaje): ${pokemonDestinatario.vida}/${pokemonDestinatario.vidaTotal}/${pokemonDestinatario.obtenerVidaRestanteComoPorcentaje()}%`);
+    console.log();
+    console.log('///////////////////////////////////////////////');
+    console.log();
 }
 
 
@@ -96,5 +107,6 @@ export {
     obtenerRolDeBatallaDeUsuario,
     obtenerContenedorDeImagenesParaCambioAPartirDeRol,
     obtenerPokemonAPartirDeIdDeImagen,
-    primeraLetraMayuscula
+    primeraLetraMayuscula,
+    imprimirEstadoDePokemonsEnCombate
 };

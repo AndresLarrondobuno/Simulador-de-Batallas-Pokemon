@@ -9,7 +9,8 @@ import { AdministradorDeInterfazDeChat } from "./administradorDeInterfazChat.js"
 import { AdministradorDeInterfazDeBatalla } from "./administradorDeInterfazDeBatalla.js";
 import { AdministradorDeOrdenes } from "./administradorDeOrdenes.js";
 import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
-import { batalla } from "./main.js";
+import { batalla, rolUsuario } from "./main.js";
+
 
 class AdministradorDeEventosDeBatalla {
 
@@ -36,17 +37,15 @@ class AdministradorDeEventosDeBatalla {
                     AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
                 }
             }
-        }
 
-        let pokemonSolicitante = batalla.entrenadores['entrenadorSolicitante'].pokemonEnCombate;
-        let pokemonDestinatario = batalla.entrenadores['entrenadorDestinatario'].pokemonEnCombate;
-        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('solicitante', pokemonSolicitante.obtenerVidaRestanteComoPorcentaje());
-        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida('destinatario', pokemonDestinatario.obtenerVidaRestanteComoPorcentaje());
-        console.log(`poke solicitante(restante/total/porcentaje): ${pokemonSolicitante.vida}/ ${pokemonSolicitante.vidaTotal}/ ${pokemonSolicitante.obtenerVidaRestanteComoPorcentaje()}%`);
-        console.log(`poke destinatario(restante/total/porcentaje): ${pokemonDestinatario.vida}/${pokemonDestinatario.vidaTotal}/${pokemonDestinatario.obtenerVidaRestanteComoPorcentaje()}%`);
-        console.log();
-        console.log('///////////////////////////////////////////////');
-        console.log();
+            AdministradorDeInterfazDeBatalla.actualizarBarraDeVidaDePokemonsEnCombate();
+
+            if (batalla.pokemonFueVencido() && (rolUsuario === batalla.obtenerEntrenadorParaCambioForzado().rol)) {
+                console.log("MURIO UN POKEMON");
+                let entrenadorParaCambioForzado = batalla.obtenerEntrenadorParaCambioForzado();
+                AdministradorDeEventosDeBatalla.notificarMuerteDePokemon(entrenadorParaCambioForzado);
+            }
+        }
     }
 
 
@@ -98,32 +97,23 @@ class AdministradorDeEventosDeBatalla {
             if (entrenadorSolicitanteEligioAccion && entrenadorDestinatarioEligioAccion) {
                 console.log("Ambos entrenadores eligieron accion.");
                 AdministradorDeEventosDeBatalla.actualizarEstadoDeBatalla(respuestaJson);
-
-                if (batalla.pokemonFueVencido()) {
-                    let entrenadorParaCambioForzado = batalla.obtenerEntrenadorParaCambioForzado();
-                    AdministradorDeEventosDeBatalla.notificarMuerteDePokemon(entrenadorParaCambioForzado);
-                }
             }
         }
     }
 
 
-    static ejecutarCambioForzadoPorMuerte(event, entrenador, informacionDeOrden) {
-        //obtener informacion de orden, en este caso el indice del pokemon elegido para el cambio
-        //asignar orden
-        //ejecutar orden
-        AdministradorDeEventosDeBatalla.obtenerInformacionDeCambioDePokemon(event);
+    static ejecutarCambioForzadoPorMuerte(entrenador, indicePokemonEntrante) {
+        let pokemonEntrante = entrenador.equipo.pokemons[indicePokemonEntrante];
+        let pokemonEnCombate = entrenador.pokemonEnCombate;
+        let informacionDeOrden = { "indiceMovimiento": null, "indicePokemonParaCambio": indicePokemonEntrante };
 
         AdministradorDeOrdenes.asignarOrden(entrenador, informacionDeOrden);
-
         entrenador.darOrden();
 
         AdministradorDeInterfazDeBatalla.actualizarImagenDePokemonEnCombate(entrenador);
-
-        let rolUsuario = obtenerRolDeBatallaDeUsuario();
-        if (entrenador.rol === rolUsuario) {
-            AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
-        }
+        AdministradorDeInterfazDeBatalla.actualizarBotonesDeMovimientos(entrenador);
+        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida(entrenador, pokemonEntrante.obtenerVidaRestanteComoPorcentaje());
+        AdministradorDeInterfazDeBatalla.terminarAnimacionDePulso(pokemonEnCombate.obtenerImagen());
     }
 
 
@@ -143,19 +133,36 @@ class AdministradorDeEventosDeBatalla {
 
     static async notificarMuerteDePokemon(entrenador) {
         let datos = {
-            "message": entrenador.rol,
             "type": "notificacionDeMuerteDePokemon",
+            "message": {
+                "indicePokemonVencido": entrenador.pokemonEnCombate.indiceEnEquipo,
+                "rol": entrenador.rol,
+            }
         }
         await enviarMensajeAConsumidor(websocket, datos, mensajeEnviadoAConsumidorConExito);
     }
 
 
-    static async notificarCambioForzado(entrenador) {
+    static async notificarCambioForzado(event, entrenador) {
+        let imagen = event.target;
+        let indicePokemonEntrante = imagen.id[imagen.id.length - 1];
+
         let datos = {
-            "message": entrenador.rol,
             "type": "notificacionDeCambioForzado",
+            "message": {
+                "rol": entrenador.rol,
+                "indicePokemonVencido": entrenador.pokemonEnCombate.indiceEnEquipo,
+                "indicePokemonEntrante": indicePokemonEntrante,
+            }
         }
+        console.log("indice pokemon vencido: ", entrenador.pokemonEnCombate.indiceEnEquipo);
+
         await enviarMensajeAConsumidor(websocket, datos, mensajeEnviadoAConsumidorConExito);
+    }
+
+
+    static notificarFinalizacionDeBatalla() {
+        
     }
 
 

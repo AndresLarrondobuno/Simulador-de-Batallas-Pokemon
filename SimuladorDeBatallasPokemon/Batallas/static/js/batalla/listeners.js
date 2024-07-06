@@ -57,7 +57,28 @@ elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
     elemento.addEventListener('click', AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
 });
 
-console.log("listeners: ", elementosConListenerParaEleccionVoluntariaDeUsuario);
-console.log(elementosConListenerParaEleccionVoluntariaDeUsuario.length);
 
-export {elementosConListenerParaEleccionVoluntariaDeUsuario};
+class AdministradorDeListenersDeElementosHTML {
+
+    static desactivarListenersDeAccionesDeBatalla() {
+        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
+            elemento.removeEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+        });
+    }
+
+
+    static activarListenersDeAccionesDeBatalla() {
+        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
+            elemento.addEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+        });
+    }
+
+
+    static quitarListenerDeClickAElemento(elementoHtml) {
+        elementoHtml.removeEventListener('click', AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+    }
+}
+
+
+
+export { elementosConListenerParaEleccionVoluntariaDeUsuario, AdministradorDeListenersDeElementosHTML };

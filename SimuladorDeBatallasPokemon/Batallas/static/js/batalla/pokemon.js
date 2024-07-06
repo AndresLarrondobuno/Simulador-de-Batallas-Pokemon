@@ -21,7 +21,6 @@ class Pokemon {
         
         this._equipo = null;
         this._entrenador = null;
-        this._enProcesoDeCambioForzado = false;
     }
 
 
@@ -46,8 +45,8 @@ class Pokemon {
 
 
 
-    set enCombate(seEncuentraEnCombate) {
-        this._enCombate = seEncuentraEnCombate;
+    set enCombate(bool) {
+        this._enCombate = bool;
     }
 
 
@@ -58,16 +57,6 @@ class Pokemon {
 
     set equipo(equipo) {
         this._equipo = equipo;
-    }
-
-
-    set enProcesoDeCambioForzado(bool) {
-        this._enProcesoDeCambioForzado = bool;
-    }
-
-
-    get enProcesoDeCambioForzado() {
-        return this._enProcesoDeCambioForzado
     }
 
 
@@ -103,6 +92,10 @@ class Pokemon {
 
     get entrenador() {
         return this._entrenador
+    }
+
+    get indiceEnEquipo() {
+        return this._equipo.pokemons.indexOf(this);
     }
 
 

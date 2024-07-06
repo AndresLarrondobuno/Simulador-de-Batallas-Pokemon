@@ -1,5 +1,5 @@
-import { AdministradorDeEventosDeBatalla } from "./administradorDeEventosDeBatalla.js";
-import { elementosConListenerParaEleccionVoluntariaDeUsuario } from "./listeners.js";
+import { obtenerRolDeBatallaDeUsuario } from "../../../../static/js/funcionesAuxiliares.js";
+import { batalla } from "./main.js";
 
 class AdministradorDeInterfazDeBatalla {
     static actualizarImagenDePokemonEnCombate(entrenador) {
@@ -22,21 +22,24 @@ class AdministradorDeInterfazDeBatalla {
 
 
     static actualizarBotonesDeMovimientos(entrenador) {
-        //verificar que sea el entrenador correcto.
-        console.log("actualizarBotonesDeMovimientos() ejecutado");
-        let pokemonEnCombate = entrenador.pokemonEnCombate;
-        let movimientos = pokemonEnCombate.movimientos;
-        let contenedorMovimientos = document.getElementById('contenedorMovimientos');
-        let botonesMovimientos = contenedorMovimientos.querySelectorAll("button");
-        
-        botonesMovimientos.forEach(boton => {
-            boton.textContent = AdministradorDeInterfazDeBatalla.obtenerNombreDeMovimientoParaBoton(movimientos, boton);
-        });
+        if (entrenador.rol === obtenerRolDeBatallaDeUsuario()) {
+            let pokemonEnCombate = entrenador.pokemonEnCombate;
+            let movimientos = pokemonEnCombate.movimientos;
+            let contenedorMovimientos = document.getElementById('contenedorMovimientos');
+            let botonesMovimientos = contenedorMovimientos.querySelectorAll("button");
+
+            botonesMovimientos.forEach(boton => {
+                boton.textContent = AdministradorDeInterfazDeBatalla.obtenerNombreDeMovimientoParaBoton(movimientos, boton);
+            });
+        }
     }
 
 
-    static actualizarBarraDeVida(rolEntrenador, porcentajeDeVidaRestante) {
-        if (rolEntrenador === 'solicitante') {
+    static actualizarBarraDeVida(entrenador) {
+        let porcentajeDeVidaRestante = entrenador.pokemonEnCombate.obtenerVidaRestanteComoPorcentaje();
+
+        if (entrenador.rol === 'solicitante') {
+            console.log("actualizando barra de vida de solicitante...");
             var contenedorVidaRestante = document.getElementById("barraVidaRestanteSolicitante");
         }
         else {
@@ -44,10 +47,17 @@ class AdministradorDeInterfazDeBatalla {
         }
 
         if (porcentajeDeVidaRestante < 0) { porcentajeDeVidaRestante = 0; }
-            requestAnimationFrame(() => {
-                contenedorVidaRestante.style.width = `${porcentajeDeVidaRestante}%`;
+        requestAnimationFrame(() => {
+            contenedorVidaRestante.style.width = `${porcentajeDeVidaRestante}%`;
         });
+    }
 
+
+    static actualizarBarraDeVidaDePokemonsEnCombate() {
+        let entrenadorSolicitante = batalla.entrenadores['entrenadorSolicitante'];
+        let entrenadorDestinatario = batalla.entrenadores['entrenadorDestinatario'];
+        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida(entrenadorSolicitante);
+        AdministradorDeInterfazDeBatalla.actualizarBarraDeVida(entrenadorDestinatario);
     }
 
 
@@ -57,29 +67,32 @@ class AdministradorDeInterfazDeBatalla {
         return nombreMovimiento
     }
 
-    
+
     static iniciarAnimacionDePulso(elementoImagen) {
         elementoImagen.classList.add("imagenPulsante");
     }
-    
+
 
     static terminarAnimacionDePulso(elementoImagen) {
         elementoImagen.classList.remove("imagenPulsante");
     }
 
 
-    static desactivarListenersDeAccionesDeBatalla() {
-        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
-            elemento.removeEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+    static terminarAnimacionesDePulsoDeEquipo(entrenador) {
+        entrenador.equipo.pokemons.forEach(pokemon => {
+            AdministradorDeInterfazDeBatalla.terminarAnimacionDePulso(pokemon.obtenerImagen());
         });
     }
 
 
-    static activarListenersDeAccionesDeBatalla() {
-        elementosConListenerParaEleccionVoluntariaDeUsuario.forEach(elemento => {
-            elemento.addEventListener("click", AdministradorDeEventosDeBatalla.guardarEleccionDeAccionDeBatalla);
+    static iniciarAnimacionesDePulsoParaSeleccionDePokemon(entrenador) {
+        entrenador.equipo.pokemons.forEach(pokemon => {
+            if (!pokemon.vivo) {
+                AdministradorDeInterfazDeBatalla.terminarAnimacionDePulso(pokemon.obtenerImagen());
+            }
         });
     }
+
 
 }
 
