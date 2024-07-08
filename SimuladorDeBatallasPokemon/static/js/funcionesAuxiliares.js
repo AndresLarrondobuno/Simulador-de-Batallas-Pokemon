@@ -75,9 +75,10 @@ function obtenerContenedorDeImagenesParaCambioAPartirDeRol(rol) {
 }
 
 
-function obtenerPokemonAPartirDeIdDeImagen(batalla, rol, idImagen) {
-    let indiceEnEquipo = idImagen[idImagen.length - 1];
+function obtenerPokemonAPartirDeIdDeImagen(batalla, idImagen) {
+    let rol = obtenerRolDeBatallaDeUsuario();
     let entrenador = batalla.obtenerEntrenadorPorRol(rol);
+    let indiceEnEquipo = idImagen[idImagen.length - 1];
     return entrenador.equipo.pokemons[indiceEnEquipo];
 
 }

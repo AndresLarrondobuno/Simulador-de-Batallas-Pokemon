@@ -70,11 +70,16 @@ class Entrenador {
         console.log(this._rol, ": entrenador.darOrden() ejecutado");
         if (!this.orden.ejecutar()) {
             console.log(`${this.pokemonEnCombate} no pudo atacar porque fue vencido.`);
-            //ofrecer cambio de pokemon
         }
         else {
             console.log(`el entrenador ${this.rol} ejecuto una ${this.orden.tipo}`);
         }
+    }
+
+
+    noPoseePokemonsVivos() {
+        const pokemonEstaMuerto = (pokemon) => !pokemon.vivo;
+        return this.equipo.pokemons.every(pokemonEstaMuerto);
     }
 
 

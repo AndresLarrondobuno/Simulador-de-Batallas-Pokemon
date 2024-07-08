@@ -8,7 +8,7 @@ import {
 import { AdministradorDeInterfazDeChat } from "./administradorDeInterfazChat.js";
 import { AdministradorDeInterfazDeBatalla } from "./administradorDeInterfazDeBatalla.js";
 import { AdministradorDeOrdenes } from "./administradorDeOrdenes.js";
-import { websocket } from "../conexionesWebsocket/iniciarConexionWs.js";
+import { websocket } from "../conexionesWebsocket/administradorDeConexionWebsocket.js";
 import { batalla, rolUsuario } from "./main.js";
 
 
@@ -161,8 +161,14 @@ class AdministradorDeEventosDeBatalla {
     }
 
 
-    static notificarFinalizacionDeBatalla() {
-        
+    static async notificarFinalizacionDeBatalla(entrenadorGanador) {
+        let datos = {
+            "type": "notificacionDeFinalDeBatalla",
+            "message": {
+                "rolEntrenadorGanador": entrenadorGanador.rol,
+            }
+        }
+        await enviarMensajeAConsumidor(websocket, datos, mensajeEnviadoAConsumidorConExito);
     }
 
 
@@ -192,7 +198,6 @@ class AdministradorDeEventosDeBatalla {
 
         return informacionDeOrden
     }
-
 }
 
 export { AdministradorDeEventosDeBatalla };

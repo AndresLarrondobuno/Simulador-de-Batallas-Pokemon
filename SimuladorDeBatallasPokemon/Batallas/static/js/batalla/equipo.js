@@ -3,7 +3,7 @@ import { Pokemon } from "./pokemon.js";
 class Equipo {
     constructor(datosEquipo) {
         this._pokemons = this.obtenerPokemons(datosEquipo);
-        this._pokemons[0].enCombate = true; //flageo al lider(pokemon en combate) con propiedad enCombate
+        this._pokemons[0].enCombate = true;
         this._tamano = datosEquipo.length;
         this._entrenador = null;
     }

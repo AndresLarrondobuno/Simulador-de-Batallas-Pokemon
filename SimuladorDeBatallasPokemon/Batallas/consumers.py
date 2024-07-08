@@ -119,6 +119,19 @@ class BatallaConsumer(AsyncWebsocketConsumer):
         })
 
         await self.send(text_data=json_contexto)
+        
+        
+    async def notificacionDeFinalDeBatalla(self, contexto):
+        rol_ganador = contexto['message']['rolEntrenadorGanador']
+        print(f"metodo notificacionDeFinalDeBatalla ejecutado, consumidor asociado a: {self.scope['user']}")
+
+        json_contexto = json.dumps({
+            'type':'notificacionDeFinalDeBatalla',
+            'rolEntrenadorGanador': rol_ganador,
+
+        })
+
+        await self.send(text_data=json_contexto)
 
     
     

@@ -79,10 +79,19 @@ class Batalla {
     }
 
 
-
     pokemonFueVencido() {
         let arrayEntrenadores = Object.values(this.entrenadores);
         return arrayEntrenadores.some(entrenador => !entrenador.pokemonEnCombate.vivo);
+    }
+
+
+    obtenerEntrenadorGanador() {
+        if (this.entrenadores['entrenadorSolicitante'].noPoseePokemonsVivos()) {
+            return this.entrenadores['entrenadorDestinatario']
+        }
+        else {
+            return this.entrenadores['entrenadorSolicitante']
+        }
     }
 
 }
